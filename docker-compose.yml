@@ -1,0 +1,37 @@
+version: '3'
+services:
+    web:
+        image: nginx:latest
+        ports:
+            - "8086:80"
+        volumes:
+            - ./conf.d:/etc/nginx/conf.d
+            - ./app:/app
+        depends_on:
+            - php
+        restart: always
+    php:
+        build:
+            context: .
+            dockerfile: PHP.Dockerfile
+        volumes:
+            - ./app:/app
+            - ./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+        depends_on:
+            - mysql
+        restart: always
+    mysql:
+        image: mariadb:latest
+        environment:
+            MYSQL_ROOT_PASSWORD: 'password'
+            MYSQL_USER: 'abhinav'
+            MYSQL_PASSWORD: 'password'
+            MYSQL_DATABASE: 'coralnodes_phpcms'
+        volumes:
+            - coralnodes_phpcms:/var/lib/mysql
+        ports:
+            - "33096:3306"
+        restart: always
+volumes:
+    coralnodes_phpcms: {}
+        

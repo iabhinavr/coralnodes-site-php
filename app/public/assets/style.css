@@ -1,0 +1,167 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+    p {
+        @apply font-crimsonpro;
+    }
+
+    .post-content h2 {
+        @apply text-2xl font-firacode font-bold py-2 pl-4 border-l-brand-yellow border-l-4 mb-4;
+    }
+
+    .post-content h3 {
+        @apply text-xl pb-4 border-b-brand-yellow border-b mb-4 inline-block clear-both;
+    }
+
+    .post-content pre {
+        @apply mb-4;
+    }
+
+    .post-content a {
+        @apply underline text-brand-lightcoral;
+    }
+
+    .post-content p {
+        @apply pb-6 font-crimsonpro text-2xl text-gray-300;
+    }
+
+    .post-content p code {
+        @apply text-base;
+    }
+
+    .post-content ul {
+        @apply pb-4 pl-4 list-disc text-lg text-gray-300;
+    }
+
+    .post-content ol {
+        @apply pb-4 pl-4 list-decimal list-inside text-lg text-gray-300;
+    }
+
+    .post-content li {
+        @apply pb-4;
+    }
+
+    .post-content figure {
+        @apply pb-4;
+    }
+
+    .post-content figure figcaption {
+        @apply text-center py-2;
+    }
+
+    pre code {
+        @apply font-firacode;
+    }
+
+    .post-content pre {
+        @apply p-2 bg-slate-700;
+    }
+
+    .post-content p code,
+    .post-content li code,
+    .post-content h2 code,
+    .post-content h3 code {
+        @apply py-1 px-2 bg-slate-700 rounded;
+    }
+
+    .post-content .vid-wrapper-16-by-9 {
+        @apply aspect-video bg-contain relative mb-4;
+    }
+
+    .post-content .vid-overlay-wrapper {
+        @apply inset-0 bg-slate-900/50 absolute flex justify-center items-center ring ring-slate-600;
+    }
+
+    .post-content .vid-play-btn,
+    .yt-video .vid-play-btn {
+        @apply h-20 w-20 cursor-pointer bg-[url('images/play-circle.svg')] bg-contain bg-no-repeat transition-all hover:h-24 hover:w-24;
+    }
+
+    .post-content .vid-overlay-bottom {
+        @apply absolute right-0 bottom-0 left-0 flex justify-between items-center;
+    }
+
+    .post-content .vid-overlay-bottom a {
+        @apply text-slate-100 no-underline;
+    }
+
+    .post-content .vid-overlay-notify {
+        @apply text-[12px] pl-4;
+    }
+
+    .post-content .vid-overlay-ext {
+        @apply pt-3 pb-2 px-3 bg-red-600 block hover:bg-red-500 transition-all;
+    }
+
+    .post-content iframe {
+        @apply w-full h-full;
+    }
+
+    .post-content table {
+        @apply table-auto border-collapse border border-slate-700 bg-slate-800 mb-4;
+    }
+
+    .post-content table td,
+    .post-content table th {
+        @apply border border-slate-700 p-2;
+    }
+
+    .post-content .toc {
+        @apply bg-slate-800 rounded-md p-4 mb-4;
+    }
+
+    .post-content .toc .toc-title {
+        @apply text-xl py-3;
+    }
+
+    .post-content .toc ul {
+        @apply pb-0 list-none;
+    }
+
+    .post-content .toc li {
+        @apply py-1;
+    }
+
+    .post-content .toc li a {
+        @apply no-underline hover:underline;
+    }
+
+}
+
+/* crimson-pro-regular - latin */
+@font-face {
+    font-display: swap;
+    font-family: 'crimson-pro';
+    font-style: normal;
+    font-weight: 400;
+    src: url('https://cdn-2.coralnodes.com/coralnodes/fonts/crimson-pro/crimson-pro-v24-latin-regular.woff2') format('woff2');
+}
+
+/* crimson-pro-italic - latin */
+@font-face {
+    font-display: swap;
+    font-family: 'crimson-pro';
+    font-style: italic;
+    font-weight: 400;
+    src: url('https://cdn-2.coralnodes.com/coralnodes/fonts/crimson-pro/crimson-pro-v24-latin-italic.woff2') format('woff2');
+}
+
+/* crimson-pro-700 - latin */
+@font-face {
+    font-display: swap;
+    font-family: 'crimson-pro';
+    font-style: normal;
+    font-weight: 700;
+    src: url('https://cdn-2.coralnodes.com/coralnodes/fonts/crimson-pro/crimson-pro-v24-latin-700.woff2') format('woff2');
+}
+
+/* fira-code-regular - latin */
+@font-face {
+    font-display: swap;
+    font-family: 'fira-code';
+    font-style: normal;
+    font-weight: 400;
+    src: url('https://cdn-2.coralnodes.com/coralnodes/fonts/fira-code/fira-code-v22-latin-regular.woff2') format('woff2');
+}

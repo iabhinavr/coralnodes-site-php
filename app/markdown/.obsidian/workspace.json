@@ -1,0 +1,184 @@
+{
+  "main": {
+    "id": "4b931d2f81ee8d9c",
+    "type": "split",
+    "children": [
+      {
+        "id": "5eac8d9f7fc3f0ce",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "d11cf4b8871006c7",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "canva-review.md",
+                "mode": "source",
+                "source": true
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "0ab6b91d704cf5d7",
+    "type": "split",
+    "children": [
+      {
+        "id": "3e6d30eae75407f3",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "cc74424d3abddee8",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "815a4701cdc11100",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "youtu.be",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "84626596d73070c6",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 363.5
+  },
+  "right": {
+    "id": "f6d1806d92a5b6a4",
+    "type": "split",
+    "children": [
+      {
+        "id": "f1c888801d6db0fb",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "6e52edbe831e0ea7",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "canva-review.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "d7ccf1883f7aeb3e",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "canva-review.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "25c791bf10f91b45",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "d85174c8c64d3bf9",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "canva-review.md"
+              }
+            }
+          }
+        ],
+        "currentTab": 3
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false
+    }
+  },
+  "active": "d11cf4b8871006c7",
+  "lastOpenFiles": [
+    "cloudways-hosting-review.md",
+    "astra-theme-review.md",
+    "oceanwp-theme-review.md",
+    "sedEkjQZ1",
+    "neve-theme-review-how-it-fares-as-a-multipurpose-wordpress-theme.md",
+    "how-to-install-wordpress-on-localhost.md",
+    "add-adobe-fonts-wordpress.md",
+    "dwell-time.md",
+    "http-status-codes.md",
+    "blocksy-theme-review.md",
+    "canva-review.md",
+    "cloudways-vs-kinsta.md",
+    "cloudwayscdn-review.md",
+    "cloudways-alternatives.md",
+    "static-site-hosting-services.md",
+    "wp-super-cache-settings-tutorial.md",
+    "what-are-permalinks-wordpress.md",
+    "wasabi-storage-review.md",
+    "top-woocommerce-themes.md",
+    "url-basics.md",
+    "how-to-schedule-wordpress-posts.md",
+    "how-to-find-wordpress-login-url.md",
+    "delete-limit-revisions-wordpress.md",
+    "create-image-gallery-wordpress.md",
+    "create-a-featured-posts-grid-astra-theme-custom-layouts.md",
+    "best-blogging-platforms.md",
+    "sedkkBNrY",
+    "sedkjFtIC",
+    "sedrEDhnK",
+    "sedaV22px",
+    "sedlaoKym"
+  ]
+}
