@@ -30,8 +30,8 @@ jobs:
       - name: Copy single file to remote
         uses: appleboy/scp-action@master
         with:
-          source: "README.md"
-          target: "/root/coralnodes-site-php-test/README-test.md"
+          source: "."
+          target: "/root/coralnodes-site-php-test"
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
