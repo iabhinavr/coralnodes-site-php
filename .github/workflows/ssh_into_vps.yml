@@ -1,13 +1,16 @@
-name: SSH into VPS
+name: SSH Into VPS
 
 on:
-  workflow_dispatch:  # Manually trigger the workflow from the Actions tab in GitHub
+  workflow_dispatch:  # Manual trigger
 
 jobs:
-  ssh:
+  echo_secret:
     runs-on: ubuntu-latest
-
+    
     steps:
-      - name: SSH into VPS
+      - name: Create SSH Key File
+        run: echo "${{ secrets.SSH_PRIVATE_KEY }}" > ssh_key && chmod 600 ssh_key
+      
+      - name: Echo SSH Private Key
         run: |
-          ssh -i ${{ secrets.SSH_PRIVATE_KEY }} ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} -p ${{ secrets.VPS_SSH_PORT }}
+          ssh -i ssh_key ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} -p ${{ secrets.VPS_SSH_PORT }}
