@@ -11,6 +11,7 @@ jobs:
         shell: bash -l {0}
 
     steps:
+
       - name: Set up Node.js 20
         uses: actions/setup-node@v2
         with:
@@ -25,12 +26,11 @@ jobs:
           composer install
           npm install
 
-      - name: scp test
-        uses: appleboy/scp-action@v0.1.7
+      - name: Copy single file to remote
+        uses: garygrossgarten/github-action-scp@release
         with:
+          local: README.md
+          remote: /root/coralnodes-site-php-test/README-test.md
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: ${{ secrets.VPS_SSH_PORT }}
-          source: "/*"
-          target: "/root/coralnodes-site-php-test"
+          privateKey: ${{ secrets.SSH_PRIVATE_KEY }}
