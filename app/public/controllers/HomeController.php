@@ -41,8 +41,8 @@ class HomeController extends MainController {
 
         $props = [
             'id' => $content['id'],
-            'title' => $content['title'],
-            'excerpt' => $content['excerpt'],
+            'title' => "CoralNodes | Web Development, Coding, Tech",
+            'excerpt' => "A place where you can find articles related to web development, coding, digital marketing, and tech in general",
             'content_html' => $this->markdownFormatter->content_html($content['body'], false)
         ];
 
