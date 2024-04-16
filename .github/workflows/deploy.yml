@@ -32,4 +32,4 @@ jobs:
           username: ${{ secrets.VPS_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.VPS_SSH_PORT }}
-          script: scp -r . ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }}:/root/coralnodes-site-php/
+          script: whoami
