@@ -31,7 +31,7 @@ jobs:
         uses: appleboy/scp-action@master
         with:
           source: "."
-          target: "/root/coralnodes-site-php-test"
+          target: "/root/coralnodes-site-php"
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
