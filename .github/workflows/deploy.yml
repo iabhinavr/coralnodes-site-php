@@ -25,11 +25,12 @@ jobs:
           composer install
           npm install
 
-      - name: Deploy to VPS
-        uses: appleboy/ssh-action@master
+      - name: scp test
+        uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.VPS_SSH_PORT }}
-          script: whoami
+          source: "/*"
+          target: "/root/coralnodes-site-php-test"
