@@ -13,7 +13,7 @@ jobs:
         shell: bash -l {0}
 
     steps:
-    - name: Set up Node.js 20
+      - name: Set up Node.js 20
         uses: actions/setup-node@v2
         with:
           node-version: '20'
@@ -34,5 +34,5 @@ jobs:
           username: ${{ secrets.VPS_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.VPS_SSH_PORT }}
-          script: |
-            scp -r . ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }}:/root/coralnodes-site-php/
+        script: |
+          scp -r . ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }}:/root/coralnodes-site-php/
