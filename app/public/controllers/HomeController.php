@@ -55,9 +55,11 @@ class HomeController extends MainController {
          */
         
         $props['seo_data'] = [
-            'title' => $content['title'],
+            'title' => "CoralNodes | Web Development, Coding, Tech",
             "canonical" => "https://www.coralnodes.com/" . $content['slug'] . "/",
         ];
+
+        $props['seo_data']['meta_names']['description'] = "A place where you can find articles related to web development, coding, digital marketing, and tech in general";
 
         $get_content_seo = $this->contentMetadataModel->get_content_seo_data($content['id'], 'page');
 

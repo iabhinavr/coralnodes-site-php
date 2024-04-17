@@ -241,7 +241,7 @@ class ContentController extends MainController {
                     "og:image" => "https://cdn-2.coralnodes.com/coralnodes/uploads/" . $row['featured_image'] . "/",
                 ],
                 "meta_names" => [
-                    "description" => $title,
+                    "description" => $description,
                     "author" => "Abhinav",
                     "twitter_card" => "summary_large_image",
                     "twitter_creator" => "@https://www.twitter.com/iabhinavr",
