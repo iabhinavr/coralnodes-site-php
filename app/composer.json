@@ -4,6 +4,7 @@
         "php-di/php-di": "^7.0",
         "ezyang/htmlpurifier": "^4.16",
         "erusev/parsedown": "^1.7",
-        "symfony/yaml": "^6.3"
+        "symfony/yaml": "^6.3",
+        "symfony/dotenv": "^6.4"
     }
 }

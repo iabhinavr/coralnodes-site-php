@@ -14,6 +14,8 @@ services:
         build:
             context: .
             dockerfile: PHP.Dockerfile
+            args:
+                APP_ENV: ${APP_ENV}
         volumes:
             - ./app:/app
             - ./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
@@ -23,10 +25,10 @@ services:
     mysql:
         image: mariadb:latest
         environment:
-            MYSQL_ROOT_PASSWORD: 'password'
-            MYSQL_USER: 'abhinav'
-            MYSQL_PASSWORD: 'password'
-            MYSQL_DATABASE: 'coralnodes_phpcms'
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+            MYSQL_USER: ${DB_USER}
+            MYSQL_PASSWORD: ${DB_PASSWORD}
+            MYSQL_DATABASE: ${DB_NAME}
         volumes:
             - coralnodes_phpcms:/var/lib/mysql
         ports:

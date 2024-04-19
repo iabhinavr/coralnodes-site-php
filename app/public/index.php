@@ -1,9 +1,17 @@
 <?php
 $start_time = hrtime(true);
 use DI\ContainerBuilder;
+use Symfony\Component\Dotenv\Dotenv;
 
 require '../vendor/autoload.php';
 require './lib/utils.php';
+
+$dotenv = new Dotenv();
+$dotenv->load(__DIR__ . '/../.env');
+
+if(isset($_ENV['APP_ENV']) && $_ENV['APP_ENV'] === 'local') {
+    echo 'local environment';
+}
 
 ini_set('xdebug.var_display_max_depth', 10);
 ini_set('xdebug.var_display_max_children', 256);
