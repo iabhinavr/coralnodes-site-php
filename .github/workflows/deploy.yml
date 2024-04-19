@@ -49,4 +49,5 @@ jobs:
           script: |
             cp /home/abhinav/.env /home/abhinav/coralnodes-site-php/.env
             cp /home/abhinav/.env /home/abhinav/coralnodes-site-php/app/.env
-            mkdir -p /home/abhinav/app/logs && touch /home/abhinav/app/logs/php_error.log
+            mkdir -p /home/abhinav/app/logs
+            touch /home/abhinav/app/logs/php_error.log
