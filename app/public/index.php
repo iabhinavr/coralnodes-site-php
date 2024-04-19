@@ -17,8 +17,7 @@ if(isset($_ENV['APP_ENV']) && $_ENV['APP_ENV'] === 'local') {
 else {
     error_reporting(0);
     ini_set('display_errors', 0);
-    ini_set('log_errors', 1);
-    ini_set('error_log', __DIR__ . '/../logs/php_error.log');
+    ini_set('log_errors', 0);
 }
 
 $containerBuilder = new ContainerBuilder();

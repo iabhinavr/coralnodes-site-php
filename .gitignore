@@ -2,5 +2,5 @@
 app/.env
 app/vendor
 app/node_modules
-app/logs
-app/logs/*
+logs
+logs/*
