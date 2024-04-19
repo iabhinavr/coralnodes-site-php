@@ -1,5 +1,5 @@
 <?php
-
+$start_time = hrtime(true);
 use DI\ContainerBuilder;
 use Symfony\Component\Dotenv\Dotenv;
 
@@ -108,4 +108,4 @@ $execution_time = $end_time - $start_time;
 
 $execution_time_seconds = $execution_time / 1e9;
 
-// echo $execution_time_seconds;
+echo $execution_time_seconds;
