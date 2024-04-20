@@ -28,7 +28,7 @@ $container = $containerBuilder->build();
 
 $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
     $r->addRoute('GET', '/', 'HomeController@index');
-    $r->addRoute('GET', '/articles/', 'ContentController@article_index');
+    $r->addRoute('GET', '/blog/', 'ContentController@article_index');
     $r->addRoute('GET', '/feed/', 'SitemapController@rss_feed');
     $r->addRoute('GET', '/search', 'SearchController@search_main');
     $r->addRoute('GET', '/sitemap.xml', 'SitemapController@sitemap_main');

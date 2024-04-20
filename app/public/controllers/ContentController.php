@@ -101,7 +101,7 @@ class ContentController extends MainController {
                 'title' => $article['title'],
                 'excerpt' => $article['excerpt'],
                 'published_date' => $published_date,
-                'featured_image' => !empty($article['featured_image']) ? "https://cdn-2.coralnodes.com/coralnodes/uploads/" . $article['featured_image'] : "/assets/images/default-image.jpg",
+                'featured_image' => !empty($article['featured_image']) ? "https://cdn-2.coralnodes.com/coralnodes/uploads/medium/" . $article['featured_image'] : "/assets/images/default-image.jpg",
                 'slug' => $article['slug'],
                 'categories' => [],
                 'tags' => []
@@ -210,19 +210,24 @@ class ContentController extends MainController {
 
         if($get_content_seo['status']) {
 
-            $title = $description = '';
+            $title = $article['title'];
+            $description = $article['excerpt'];
 
             $content_seo = $get_content_seo['result'];
-            foreach($content_seo as $row) {
-                switch($row['meta_key']) {
-                    case 'seo_title' :
-                        $title = $row['meta_value'];
-                        break;
-                    case 'meta_description' :
-                        $description = $row['meta_value'];
-                        break;
+
+            if(is_array($content_seo)) {
+                foreach($content_seo as $row) {
+                    switch($row['meta_key']) {
+                        case 'seo_title' :
+                            $title = $row['meta_value'];
+                            break;
+                        case 'meta_description' :
+                            $description = $row['meta_value'];
+                            break;
+                    }
                 }
             }
+            
 
             $row = $content_seo[0];
 

@@ -48,7 +48,7 @@ class ContentMetadataModel extends Database {
 
     public function get_content_seo_data(int $content_id, string $content_type = 'article') {
         try {
-            $stmt = $this->db_con->prepare("SELECT c.id, c.slug, c.published_date, c.modified_date, c.featured_image, cm.meta_key, cm.meta_value FROM content c INNER JOIN content_metadata cm ON c.id = cm.content_id WHERE c.id = :content_id AND (cm.meta_key = 'seo_title' OR cm.meta_key = 'meta_description')");
+            $stmt = $this->db_con->prepare("SELECT c.id, c.title, c.slug, c.published_date, c.modified_date, c.featured_image, cm.meta_key, cm.meta_value FROM content c LEFT JOIN content_metadata cm ON c.id = cm.content_id WHERE c.id = :content_id");
             $stmt->bindParam(":content_id", $content_id);
             if(!$stmt->execute()) {
                 return ["status" => false, "result" => "Error fetching seo data"];

@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/assets/highlight/styles/github-dark.min.css">
     <link rel="stylesheet" href="/assets/style.bundle.css">
     <title><?= $props['seo_data']['title'] ?></title>
     <?php if(!empty($props['seo_data']['canonical'])) : ?>
@@ -35,7 +36,7 @@
             <nav>
                 <ul class="flex h-full [&>li>a]:flex [&>li>a]:h-full [&>li>a]:px-2 [&>li>a]:items-center [&>li>a:hover]:-translate-y-0.5 [&>li>a:hover]:text-brand-pink [&>li>a]:transition items-center">
                     <li>
-                        <a href="/articles/">articles</a>
+                        <a href="/blog/">blog</a>
                     </li>
                     <li>
                         <form action="/search">

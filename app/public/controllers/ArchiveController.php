@@ -74,7 +74,7 @@ class ArchiveController extends MainController {
                 'title' => $article['title'],
                 'excerpt' => $article['excerpt'],
                 'published_date' => $published_date,
-                'featured_image' => !empty($article['featured_image']) ? "https://cdn-2.coralnodes.com/coralnodes/uploads/" . $article['featured_image'] : "/assets/images/default-image.jpg",
+                'featured_image' => !empty($article['featured_image']) ? "https://cdn-2.coralnodes.com/coralnodes/uploads/medium/" . $article['featured_image'] : "/assets/images/default-image.jpg",
                 'slug' => $article['slug'],
             ];
             

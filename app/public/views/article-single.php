@@ -37,11 +37,14 @@
         </div>
     </div>
 </section>
+
+<?php if(!empty($props['related_content'])) : ?>
 <section>
     <div class="container mx-auto lg:max-w-3xl">
         <h2 class="text-2xl font-firacode font-bold py-2 pl-4 border-l-brand-yellow border-l-4 mb-4">Related articles:
         </h2>
         <ul class="grid p-4 gap-2 justify-center sm:grid-cols-3">
+            
             <?php foreach ($props['related_content'] as $r): ?>
                 <li class=" max-w-xs ">
                     <a href="/<?= $r['slug'] ?>/" class="hover:text-brand-yellow">
@@ -53,8 +56,9 @@
                         </span>
                     </a>
                 </li>
-            <?php endforeach; ?>
+            <?php endforeach; ?> 
         </ul>
     </div>
 
 </section>
+<?php endif; ?>

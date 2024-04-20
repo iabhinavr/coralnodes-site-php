@@ -11,7 +11,7 @@ class SearchModel extends Database {
 
     public function search_keyword (string $keyword) {
         try {
-            $stmt = $this->db_con->prepare("SELECT * FROM content WHERE title LIKE :keyword");
+            $stmt = $this->db_con->prepare("SELECT * FROM content WHERE title LIKE :keyword AND status = 'publish'");
             $keyword = '%' . $keyword . '%';
             $stmt->bindParam(':keyword', $keyword);
             if(!$stmt->execute()) {
