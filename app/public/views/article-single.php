@@ -1,5 +1,5 @@
 <article class="single-post-article" id="article-<?= $props['id'] ?>">
-    <div class="h-[50vh] min-h-[15rem] mb-4 bg-slate-700">
+    <div class="h-[90vh] lg:h-[50vh] min-h-[15rem] mb-4 bg-slate-700">
         <div class="h-full container px-2 mx-auto flex justify-center flex-col lg:max-w-3xl">
             <h1 class="text-2xl font-bold py-4 text-brand-lightcoral">
                 <?= $props['title'] ?>

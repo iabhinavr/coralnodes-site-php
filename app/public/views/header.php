@@ -38,7 +38,7 @@
                     <li>
                         <a href="/blog/">blog</a>
                     </li>
-                    <li>
+                    <li class="hidden lg:block">
                         <form action="/search">
                             <input type="text" name="keyword" value="" class="p-2 bg-slate-700 sm:max-w-[10rem] lg:max-w-xs" placeholder="search site...">
                         </form>

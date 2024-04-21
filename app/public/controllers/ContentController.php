@@ -157,10 +157,14 @@ class ContentController extends MainController {
 
     public function article_single($article) {
 
+        $modified_obj = DateTime::createFromFormat('Y-m-d H:i:s', $article['modified_date']);
+        $modified_date = $modified_obj->format('M j, Y');
+
         $props = [
             'id' => $article['id'],
             'title' => $article['title'],
-            'modified_date' => $article['modified_date'],
+            
+            'modified_date' => $modified_date,
             'excerpt' => $article['excerpt'],
             'content_html' => $this->markdownFormatter->content_html($article['body'], false)
         ];
