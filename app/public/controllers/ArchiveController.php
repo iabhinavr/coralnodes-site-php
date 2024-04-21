@@ -53,6 +53,14 @@ class ArchiveController extends MainController {
         $props['total_posts'] = $this->taxonomyModel->get_taxonomy_content_count($args);
         $props['total_pages'] = ceil($props['total_posts'] / $args['per_page']);
 
+        if(!empty($vars['categoryName']) && $props['total_posts'] > 1) {
+            $props['page_title'] = "{$props['total_posts']} articles found under '{$args['taxonomy_name']}'";
+        }
+        else if (!empty($vars['tagName']) && $props['total_posts'] > 1) {
+            $props['page_title'] = "{$props['total_posts']} articles tagged '{$args['taxonomy_name']}'";
+        }
+        
+
 
         if($props['page_no'] > $props['total_pages']) {
             $this->error_404();
