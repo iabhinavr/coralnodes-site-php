@@ -25,7 +25,10 @@
         <?php echo $props['seo_data']['json_ld']; ?>
     </script>
 <?php endif; ?>
-    
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/assets/favicon/site.webmanifest">
 </head>
 <body class="bg-slate-900 text-slate-100 font-firacode">
     <header class="border-b-2 border-slate-700 bg-slate-800">
