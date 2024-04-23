@@ -6,6 +6,7 @@ class ContentModel extends Database
 
     function __construct()
     {
+        parent::__construct();
         $this->db_con = $this->db_connect();
     }
 

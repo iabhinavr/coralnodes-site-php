@@ -4,6 +4,7 @@ class TaxonomyModel extends Database {
 
     public $db_con;
     public function __construct() {
+        parent::__construct();
         $this->db_con = $this->db_connect();
     }
 
