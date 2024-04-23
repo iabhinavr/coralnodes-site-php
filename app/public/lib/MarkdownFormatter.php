@@ -41,7 +41,20 @@ class MarkdownFormatter {
         return $html;
     }
 
-    public function insert_toc($html) {
+    public function lazy_load_images($html) {
+        @$this->dom->loadHTML(mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8'), LIBXML_HTML_NODEFDTD); 
+        $this->xpath = new DOMXPath($this->dom);
+        $images = $this->xpath->query('//p//img');
+
+        foreach($images as $img) {
+            $img->setAttribute("loading", "lazy");
+        }
+        $html = @$this->dom->saveHTML();
+
+        $html = str_replace("<html><body>", "", $html);
+        $html = str_replace("</body></html>", "", $html);
+
+        return $html;
 
     }
 

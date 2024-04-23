@@ -8,20 +8,15 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash -l {0}
 
     steps:
-      - uses: actions/checkout@master
+      - name: Checkout Master
+        uses: actions/checkout@master
 
       - name: Set up Node.js 20
         uses: actions/setup-node@v2
         with:
           node-version: '20'
-
-      - name: Checkout Repository
-        uses: actions/checkout@v2
 
       - name: Install Dependencies
         run: |
@@ -29,7 +24,7 @@ jobs:
           composer install
           npm install
 
-      - name: Copy single file to remote
+      - name: Copy project folder to vps
         uses: appleboy/scp-action@master
         with:
           source: "."
@@ -39,7 +34,7 @@ jobs:
           key: ${{ secrets.VPS_KEY }}
           port: ${{ secrets.VPS_PORT }}
 
-      - name: multiple command
+      - name: setup environment files
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.VPS_HOST }}

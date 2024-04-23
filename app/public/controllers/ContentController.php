@@ -172,6 +172,7 @@ class ContentController extends MainController {
         $props['content_html'] = $this->TOC->toc($props['content_html']);
         $props['content_html'] = $this->parseYTEmbeds->parse($props['content_html']);
         $props['content_html'] = $this->markdownFormatter->nofollow_links($props['content_html']);
+        $props['content_html'] = $this->markdownFormatter->lazy_load_images($props['content_html']);
 
         /**
          * Fetch author bio and add it to props
