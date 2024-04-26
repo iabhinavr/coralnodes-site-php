@@ -4,7 +4,7 @@
             <li class="bg-slate-800 rounded-xl transform transition ring ring-slate-800 hover:ring-slate-600 grid sm:grid-cols-7 gap-4 mb-4">
                 <div class="sm:col-span-3 [&>a>img]:w-full [&>a>img]:h-full [&>a>img]:object-contain">
                     <a href="/<?= $article['slug'] ?>">
-                    <img src="<?= $article['featured_image'] ?>" alt="<?= $article['title'] ?>" class="rounded-l-xl">
+                    <img src="<?= $article['featured_image'] ?>" loading="lazy" alt="<?= $article['title'] ?>" class="rounded-l-xl">
                     </a>
                 </div>
 
