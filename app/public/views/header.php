@@ -11,12 +11,12 @@
     <?php endif; ?>
 <?php if(!empty($props['seo_data']['meta_names'])) : ?>
 <?php foreach($props['seo_data']['meta_names'] as $name => $content) : ?>
-    <meta name="<?= $name ?>"content="<?= $content ?>" />
+    <meta name="<?= $name ?>" content="<?= $content ?>" />
 <?php endforeach; ?>
 <?php endif; ?>
 <?php if(!empty($props['seo_data']['meta_properties'])) : ?>
 <?php foreach($props['seo_data']['meta_properties'] as $property => $content) : ?>
-    <meta property="<?= $property ?>"content="<?= $content ?>" />
+    <meta property="<?= $property ?>" content="<?= $content ?>" />
 <?php endforeach; ?>
 <?php endif; ?>
 
