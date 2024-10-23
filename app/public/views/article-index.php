@@ -2,13 +2,16 @@
     <ul class="post-list">
         <?php foreach($props['articles'] as $article) : ?>
             <li class="bg-slate-800 rounded-xl transform transition ring ring-slate-800 hover:ring-slate-600 grid sm:grid-cols-7 gap-4 mb-4">
+
+                <?php if (!empty($article['featured_image'])) : ?>
                 <div class="sm:col-span-3 [&>a>img]:w-full [&>a>img]:h-full [&>a>img]:object-contain">
                     <a href="/<?= $article['slug'] ?>">
-                    <img src="<?= $article['featured_image'] ?>" loading="lazy" alt="<?= $article['title'] ?>" class="rounded-l-xl">
+                    <img src="https://cdn-2.coralnodes.com/coralnodes/uploads/medium/<?= $article['featured_image'] ?>" loading="lazy" alt="<?= $article['title'] ?>" class="rounded-l-xl">
                     </a>
                 </div>
+                <?php endif; ?>
 
-                <div class="p-4 space-y-2 sm:col-span-4">
+                <div class="p-4 space-y-2 <?= empty($article['featured_image']) ? 'sm:col-span-7' : 'sm:col-span-4' ?>">
                     <small>
                         <?= $article['published_date'] ?>
                     </small>
