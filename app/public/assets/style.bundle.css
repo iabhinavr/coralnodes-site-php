@@ -845,6 +845,11 @@ video {
   color: rgb(255 196 107 / var(--tw-text-opacity));
 }
 
+.text-emerald-400 {
+  --tw-text-opacity: 1;
+  color: rgb(52 211 153 / var(--tw-text-opacity));
+}
+
 .text-gray-100 {
   --tw-text-opacity: 1;
   color: rgb(243 244 246 / var(--tw-text-opacity));
@@ -853,6 +858,16 @@ video {
 .text-slate-100 {
   --tw-text-opacity: 1;
   color: rgb(241 245 249 / var(--tw-text-opacity));
+}
+
+.text-emerald-500 {
+  --tw-text-opacity: 1;
+  color: rgb(16 185 129 / var(--tw-text-opacity));
+}
+
+.text-brand-coral {
+  --tw-text-opacity: 1;
+  color: rgb(248 69 55 / var(--tw-text-opacity));
 }
 
 .ring {
@@ -1178,9 +1193,24 @@ pre code {
   src: url('https://cdn-2.coralnodes.com/coralnodes/fonts/fira-code/fira-code-v22-latin-regular.woff2') format('woff2');
 }
 
+.hover\:bg-slate-800:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(30 41 59 / var(--tw-bg-opacity));
+}
+
 .hover\:text-brand-yellow:hover {
   --tw-text-opacity: 1;
   color: rgb(255 196 107 / var(--tw-text-opacity));
+}
+
+.hover\:text-brand-lightcoral:hover {
+  --tw-text-opacity: 1;
+  color: rgb(246 103 80 / var(--tw-text-opacity));
+}
+
+.hover\:text-brand-coral:hover {
+  --tw-text-opacity: 1;
+  color: rgb(248 69 55 / var(--tw-text-opacity));
 }
 
 .hover\:ring-slate-600:hover {

@@ -39,7 +39,7 @@
             <nav>
                 <ul class="flex h-full [&>li>a]:flex [&>li>a]:h-full [&>li>a]:px-2 [&>li>a]:items-center [&>li>a:hover]:-translate-y-0.5 [&>li>a:hover]:text-brand-pink [&>li>a]:transition items-center">
                     <li>
-                        <a href="/blog/">articles</a>
+                        <a href="/blog/">blog</a>
                     </li>
                     <li class="hidden lg:block">
                         <form action="/search">

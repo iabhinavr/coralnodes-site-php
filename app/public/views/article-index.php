@@ -24,12 +24,12 @@
                     <div class="flex justify-between">
                         <div>
                             <?php foreach($article['tags'] as $tag) : ?>
-                                <a href="/tag/<?= $tag['name'] ?>/" class="font-bold hover:text-brand-yellow transition">#<?= $tag['name'] ?></a>
+                                <a href="/tag/<?= $tag['name'] ?>/" class="font-bold text-emerald-400 hover:text-brand-yellow transition">#<?= $tag['name'] ?></a>
                             <?php endforeach; ?>
                         </div>
                         <div>
                             <?php foreach($article['categories'] as $category) : ?>
-                                <a href="/category/<?= $category['name'] ?>/" class="font-bold hover:text-brand-yellow transition">[<?= $category['title'] ?>]</a>
+                                <a href="/category/<?= $category['name'] ?>/" class="font-bold text-brand-lightcoral hover:text-brand-yellow transition">[<?= $category['title'] ?>]</a>
                             <?php endforeach; ?>
                         </div>
                     </div>
