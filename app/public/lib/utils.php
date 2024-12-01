@@ -12,3 +12,7 @@ function iso_8601_date($sql_date) {
     $iso_8601_date = $datetime->format('Y-m-d\TH:i:sP');
     return $iso_8601_date;
 }
+
+function _esc($string): string {
+    return trim(string: htmlspecialchars(string: $string, flags: ENT_QUOTES, encoding: 'UTF-8'));
+}

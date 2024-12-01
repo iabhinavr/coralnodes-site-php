@@ -40,7 +40,7 @@ class SearchController extends MainController {
         $props = [
             'page_title' => 'Showing results for ""',
             'seo_data' => [
-                'title' => 'Showing results for ""'
+                'title' => 'Showing results for "' . $keyword . '"'
             ],
         ];
 
