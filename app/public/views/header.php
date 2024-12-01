@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/assets/highlight/styles/github-dark.min.css">
-    <link rel="stylesheet" href="/assets/style.bundle.css">
+    <link rel="stylesheet" href="/assets/style-v2.bundle.css">
     <title><?= $props['seo_data']['title'] ?></title>
     <?php if(!empty($props['seo_data']['canonical'])) : ?>
 	<link rel="canonical" href="<?= $props['seo_data']['canonical']; ?>" />
@@ -43,7 +43,7 @@
                     </li>
                     <li class="hidden lg:block">
                         <form action="/search">
-                            <input type="text" name="keyword" value="" class="p-2 bg-slate-700 sm:max-w-[10rem] lg:max-w-xs" placeholder="search site...">
+                            <input type="text" name="keyword" value="<?= isset($_GET["keyword"]) ? htmlspecialchars(string: $_GET["keyword"], flags: ENT_QUOTES, encoding: 'UTF-8') : "" ?>" class="p-2 bg-slate-700 sm:max-w-[10rem] lg:max-w-xs" placeholder="search site...">
                         </form>
                     </li>
                 </ul>

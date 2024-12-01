@@ -794,6 +794,10 @@ video {
   font-family: fira-code, mono;
 }
 
+.font-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
 .\!text-base {
   font-size: 1rem !important;
   line-height: 1.5rem !important;
@@ -860,16 +864,6 @@ video {
   color: rgb(241 245 249 / var(--tw-text-opacity));
 }
 
-.text-emerald-500 {
-  --tw-text-opacity: 1;
-  color: rgb(16 185 129 / var(--tw-text-opacity));
-}
-
-.text-brand-coral {
-  --tw-text-opacity: 1;
-  color: rgb(248 69 55 / var(--tw-text-opacity));
-}
-
 .ring {
   --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
   --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(3px + var(--tw-ring-offset-width)) var(--tw-ring-color);
@@ -879,6 +873,10 @@ video {
 .ring-slate-800 {
   --tw-ring-opacity: 1;
   --tw-ring-color: rgb(30 41 59 / var(--tw-ring-opacity));
+}
+
+.filter {
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 
 .transition {
@@ -1193,11 +1191,6 @@ pre code {
   src: url('https://cdn-2.coralnodes.com/coralnodes/fonts/fira-code/fira-code-v22-latin-regular.woff2') format('woff2');
 }
 
-.hover\:bg-slate-800:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(30 41 59 / var(--tw-bg-opacity));
-}
-
 .hover\:text-brand-yellow:hover {
   --tw-text-opacity: 1;
   color: rgb(255 196 107 / var(--tw-text-opacity));
@@ -1206,11 +1199,6 @@ pre code {
 .hover\:text-brand-lightcoral:hover {
   --tw-text-opacity: 1;
   color: rgb(246 103 80 / var(--tw-text-opacity));
-}
-
-.hover\:text-brand-coral:hover {
-  --tw-text-opacity: 1;
-  color: rgb(248 69 55 / var(--tw-text-opacity));
 }
 
 .hover\:ring-slate-600:hover {

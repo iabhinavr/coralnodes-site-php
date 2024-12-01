@@ -17,8 +17,7 @@ class SearchController extends MainController {
     }
 
     public function search_main($queryParams = null) {
-        $keyword = !empty($queryParams['keyword']) ? $queryParams['keyword'] : false;
-
+        $keyword = !empty($queryParams['keyword']) ? trim(string: $queryParams['keyword']) : "";
 
         $search_results = $this->searchModel->search_keyword($keyword);
 
