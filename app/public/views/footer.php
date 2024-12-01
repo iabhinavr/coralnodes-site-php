@@ -11,7 +11,7 @@
         </ul>
     </div>
 </footer>
-<script src="/assets/highlight/highlight.min.js"></script>
+<script src="/assets/highlight/highlight-2.min.js"></script>
 <script src="/assets/frontend.js"></script>
 <script>hljs.highlightAll();</script>
 </body>
