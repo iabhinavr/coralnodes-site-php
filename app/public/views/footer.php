@@ -11,8 +11,8 @@
         </ul>
     </div>
 </footer>
-<script src="/assets/highlight/highlight-2.min.js"></script>
-<script src="/assets/frontend.js"></script>
+<script src="<?= _cdn_('/assets/highlight/highlight-2.min.js') ?>"></script>
+<script src="<?= _cdn_('/assets/frontend.js') ?>"></script>
 <script>hljs.highlightAll();</script>
 </body>
 </html>

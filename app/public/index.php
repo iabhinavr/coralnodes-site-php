@@ -5,13 +5,17 @@
 use DI\ContainerBuilder;
 use Symfony\Component\Dotenv\Dotenv;
 
+define(constant_name: "CDN_URL", value: "https://cdn.coralnodes.com");
+
 require '../vendor/autoload.php';
 require './lib/utils.php';
 
 $dotenv = new Dotenv();
 $dotenv->load(__DIR__ . '/../.env');
 
-if(isset($_ENV['APP_ENV']) && $_ENV['APP_ENV'] === 'local') {
+
+
+if(_is_local()) {
     ini_set('xdebug.var_display_max_depth', 10);
     ini_set('xdebug.var_display_max_children', 256);
     ini_set('xdebug.var_display_max_data', 1024);

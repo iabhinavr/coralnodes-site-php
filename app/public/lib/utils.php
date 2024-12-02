@@ -16,3 +16,17 @@ function iso_8601_date($sql_date) {
 function _esc($string): string {
     return trim(string: htmlspecialchars(string: $string, flags: ENT_QUOTES, encoding: 'UTF-8'));
 }
+
+function _is_local(): bool {
+    if (isset($_ENV['APP_ENV']) && $_ENV['APP_ENV'] === 'local') {
+        return true;
+    }
+    return false;
+}
+
+function _cdn_(string $rel_url): string {
+    if (isset($_ENV['APP_ENV']) && $_ENV['APP_ENV'] === 'local') {
+        return CDN_URL . $rel_url;
+    }
+    return CDN_URL . $rel_url;
+}

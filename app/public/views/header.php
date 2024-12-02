@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/assets/highlight/styles/github-dark.min.css">
-    <link rel="stylesheet" href="/assets/style-v2.bundle.css">
+    <link rel="stylesheet" href="<?= _cdn_('/assets/highlight/styles/github-dark.min.css') ?>">
+    <link rel="stylesheet" href="<?= _cdn_('/assets/style-v2.bundle.css') ?>">
     <title><?= _esc($props['seo_data']['title']) ?></title>
     <?php if(!empty($props['seo_data']['canonical'])) : ?>
 	<link rel="canonical" href="<?= $props['seo_data']['canonical']; ?>" />
@@ -25,16 +25,16 @@
         <?php echo $props['seo_data']['json_ld']; ?>
     </script>
 <?php endif; ?>
-    <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
-    <link rel="manifest" href="/assets/favicon/site.webmanifest">
+    <link rel="apple-touch-icon" sizes="180x180" href="<?= _cdn_('/assets/favicon/apple-touch-icon.png') ?>">
+    <link rel="icon" type="image/png" sizes="32x32" href="<?= _cdn_('/assets/favicon/favicon-32x32.png') ?>">
+    <link rel="icon" type="image/png" sizes="16x16" href="<?= _cdn_('/assets/favicon/favicon-16x16.png') ?>">
+    <link rel="manifest" href="<?= _cdn_('/assets/favicon/site.webmanifest') ?>">
 </head>
 <body class="bg-slate-900 text-slate-100 font-firacode">
     <header class="border-b-2 border-slate-700 bg-slate-800">
         <div class="container mx-auto lg:max-w-3xl flex justify-between items-stretch">
             <div class="logo-area">
-                <a href="/" class="py-4 block"><img src="https://cdn-2.coralnodes.com/coralnodes/uploads/2023/10/coralnodes-logo-v3-svg-1-small.svg" alt="CoralNodes" width="192" height="52"></a>
+                <a href="/" class="py-4 block"><img src="<?= _cdn_('/assets/images/coralnodes-logo-v3-svg-1-small.svg') ?>" alt="CoralNodes" width="192" height="52"></a>
             </div>
             <nav>
                 <ul class="flex h-full [&>li>a]:flex [&>li>a]:h-full [&>li>a]:px-2 [&>li>a]:items-center [&>li>a:hover]:-translate-y-0.5 [&>li>a:hover]:text-brand-pink [&>li>a]:transition items-center">
