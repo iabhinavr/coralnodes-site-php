@@ -39,8 +39,8 @@
     </ul>
     <ul class="pagination flex justify-between py-4">
         <li>
-            <a href="<?php echo $props['page_no'] > 2 ? "/articles/page/" . $props['page_no'] - 1 . "/" : "/articles/" ?>" class="text-gray-100 hover:text-brand-yellow">&larr; Previous</a>
+            <a href="<?php echo $props['page_no'] > 2 ? "/blog/page/" . $props['page_no'] - 1 . "/" : "/blog/" ?>" class="text-gray-100 hover:text-brand-yellow">&larr; Previous</a>
         </li>
-        <li><a href="<?php echo $props['page_no'] < $props['total_pages'] ? "/articles/page/" . $props['page_no'] + 1 . "/" : '#' ?>" class="text-gray-100 hover:text-brand-yellow">Next &rarr;</a></li>
+        <li><a href="<?php echo $props['page_no'] < $props['total_pages'] ? "/blog/page/" . $props['page_no'] + 1 . "/" : '#' ?>" class="text-gray-100 hover:text-brand-yellow">Next &rarr;</a></li>
     </ul>
 </section>

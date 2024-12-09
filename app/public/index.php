@@ -37,7 +37,7 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
     $r->addRoute('GET', '/search', 'SearchController@search_main');
     $r->addRoute('GET', '/sitemap.xml', 'SitemapController@sitemap_main');
     $r->addRoute('GET', '/{content}/', 'ContentController@content_single');
-    $r->addRoute('GET', '/articles/page/{pageNo}/', 'ContentController@article_index');
+    $r->addRoute('GET', '/blog/page/{pageNo}/', 'ContentController@article_index');
     $r->addRoute('GET', '/category/{categoryName}/', 'ArchiveController@taxonomy_content');
     $r->addRoute('GET', '/tag/{tagName}/', 'ArchiveController@taxonomy_content');
     $r->addRoute('GET', '/category/{categoryName}/page/{pageNo}/', 'ArchiveController@taxonomy_content');
