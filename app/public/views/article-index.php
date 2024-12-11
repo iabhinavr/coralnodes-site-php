@@ -4,9 +4,9 @@
             <li class="bg-slate-800 rounded-xl transform transition ring ring-slate-800 hover:ring-slate-600 grid sm:grid-cols-7 gap-4 mb-4">
 
                 <?php if (!empty($article['featured_image'])) : ?>
-                <div class="sm:col-span-3 [&>a>img]:w-full [&>a>img]:h-full [&>a>img]:object-contain">
+                <div class="sm:col-span-3">
                     <a href="/<?= $article['slug'] ?>">
-                    <img src="https://cdn-2.coralnodes.com/coralnodes/uploads/medium/<?= $article['featured_image'] ?>" loading="lazy" alt="<?= $article['title'] ?>" class="rounded-l-xl">
+                    <img src="https://cdn-2.coralnodes.com/coralnodes/uploads/medium/<?= $article['featured_image'] ?>" loading="lazy" alt="<?= $article['title'] ?>" class="rounded-l-xl w-full h-full object-cover">
                     </a>
                 </div>
                 <?php endif; ?>
