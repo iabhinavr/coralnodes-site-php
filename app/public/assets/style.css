@@ -121,11 +121,15 @@
     }
 
     .post-content .toc li {
-        @apply py-1;
+        @apply py-2;
     }
 
     .post-content .toc li a {
         @apply no-underline hover:underline;
+    }
+
+    .post-content .bi-column-grid {
+        @apply grid grid-cols-2 gap-2;
     }
 
 }
