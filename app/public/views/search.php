@@ -1,5 +1,10 @@
-<section class="mt-4 container mx-auto px-2 lg:max-w-5xl">
-    <?php if (empty($props['search_results'])) : ?>
+<section class="mt-4 container mx-auto p-2 lg:max-w-5xl">
+    <form action="/search/">
+        <input type="text" name="keyword" value="<?= isset($_GET["keyword"]) ? _esc($_GET["keyword"]) : "" ?>" class="p-2 my-2 bg-slate-700 w-full" placeholder="search site...">
+    </form>
+    <?php if ($props['search_results'] === null) : ?>
+        Type a keyword to begin searching...for example 'sorting algorithm'
+    <?php elseif($props['search_results'] === false) : ?>
         No results found related to your search word
     <?php else : ?>
     <h2 class="font-mono py-2"><?= count($props['search_results']) ?> results found for <span class="text-emerald-400">'<?= htmlspecialchars(string: $_GET["keyword"], flags: ENT_QUOTES) ?>'</span></h2>

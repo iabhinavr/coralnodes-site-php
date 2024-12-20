@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="<?= _cdn_('/assets/highlight/styles/github-dark.min.css') ?>">
-    <link rel="stylesheet" href="<?= ('/assets/style-v4.bundle.css') ?>">
+    <link rel="stylesheet" href="<?= _is_local() ? ('/assets/style-v5.bundle.css') : _cdn_('/assets/style-v5.bundle.css') ?>">
     <title><?= _esc($props['seo_data']['title']) ?></title>
     <?php if(!empty($props['seo_data']['canonical'])) : ?>
 	<link rel="canonical" href="<?= $props['seo_data']['canonical']; ?>" />
@@ -36,15 +36,20 @@
             <div class="logo-area">
                 <a href="/" class="py-4 block"><img src="<?= _cdn_('/assets/images/coralnodes-logo-v3-svg-1-small.svg') ?>" alt="CoralNodes" width="192" height="52"></a>
             </div>
-            <nav>
-                <ul class="flex h-full [&>li>a]:flex [&>li>a]:h-full [&>li>a]:px-2 [&>li>a]:items-center [&>li>a:hover]:-translate-y-0.5 [&>li>a:hover]:text-brand-pink [&>li>a]:transition items-center">
+            <nav id="site-nav">
+                <ul>
                     <li>
-                        <a href="/blog/">blog</a>
+                        <a href="/blog/">Blog</a>
                     </li>
-                    <li class="hidden lg:block">
-                        <form action="/search">
-                            <input type="text" name="keyword" value="<?= isset($_GET["keyword"]) ? _esc($_GET["keyword"]) : "" ?>" class="p-2 bg-slate-700 sm:max-w-[10rem] lg:max-w-xs" placeholder="search site...">
-                        </form>
+                    <li>
+                        <a href="/topics/">Topics</a>
+                    </li>
+                    <li>
+                        <a href="/search/">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                            </svg>
+                        </a>
                     </li>
                 </ul>
             </nav>

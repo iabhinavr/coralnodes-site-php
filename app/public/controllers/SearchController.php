@@ -17,51 +17,61 @@ class SearchController extends MainController {
     }
 
     public function search_main($queryParams = null) {
-        $keyword = !empty($queryParams['keyword']) ? trim(string: $queryParams['keyword']) : "";
 
-        $search_results = $this->searchModel->search_keyword($keyword);
-
-        if(!$keyword || !$search_results['status']) {
-
+        if(empty($queryParams['keyword'])) {
             $props = [
-                'page_title' => 'No results found',
+                'page_title' => 'Search this site',
                 'seo_data' => [
-                    'title' => 'No results found'
+                    'title' => 'Search this site'
                 ],
-                'search_results' => false,
+                'search_results' => null,
             ];
-
-            $this->render('header', $props);
-            $this->render('search', $props);
-            $this->render('footer', $props);
-            exit;
         }
+        else {
+            $keyword = !empty($queryParams['keyword']) ? trim(string: $queryParams['keyword']) : "";
 
-        $props = [
-            'page_title' => 'Showing results for ""',
-            'seo_data' => [
-                'title' => 'Showing results for "' . $keyword . '"'
-            ],
-        ];
+            $search_results = $this->searchModel->search_keyword($keyword);
 
+            if(!$search_results['status']) {
+                $props = [
+                    'page_title' => 'No results found',
+                    'seo_data' => [
+                        'title' => 'No results found'
+                    ],
+                    'search_results' => false,
+                ];
+            }
+            else {
+                $props = [
+                    'page_title' => 'Showing results for ""',
+                    'seo_data' => [
+                        'title' => 'Showing results for "' . $keyword . '"'
+                    ],
+                ];
+                
+                foreach($search_results['result'] as $s) {
         
-        foreach($search_results['result'] as $s) {
-
-            $id = (int)$s['id'];
-            $published_obj = DateTime::createFromFormat('Y-m-d H:i:s', $s['published_date']);
-            $published_date = $published_obj->format('M j, Y');
-
-            $props['search_results'][$id] = [
-                'id' => $s['id'],
-                'title' => $s['title'],
-                'excerpt' => $s['excerpt'],
-                'published_date' => $published_date,
-                'featured_image' => !empty($s['featured_image']) ? "https://cdn-2.coralnodes.com/coralnodes/uploads/" . $s['featured_image'] : "/assets/images/default-image.jpg",
-                'slug' => $s['slug'],
-            ];
-            
+                    if($s['relevance'] < 1) {
+                        continue;
+                    }
+                    
+                    $id = (int)$s['id'];
+                    $published_obj = DateTime::createFromFormat('Y-m-d H:i:s', $s['published_date']);
+                    $published_date = $published_obj->format('M j, Y');
+        
+                    $props['search_results'][$id] = [
+                        'id' => $s['id'],
+                        'title' => $s['title'],
+                        'excerpt' => $s['excerpt'],
+                        'published_date' => $published_date,
+                        'featured_image' => !empty($s['featured_image']) ? "https://cdn-2.coralnodes.com/coralnodes/uploads/" . $s['featured_image'] : "/assets/images/default-image.jpg",
+                        'slug' => $s['slug'],
+                    ];
+                    
+                }
+            }
         }
-
+        
         $this->render('header', $props);
         $this->render('search', $props);
         $this->render('footer', $props);

@@ -10,9 +10,10 @@
                 </div>
 
                 <div class="p-4 space-y-2 sm:col-span-4">
-                    <small>
-                        <?= $article['published_date'] ?>
-                    </small>
+                    <small><?= $article['published_date'] ?></small>
+                    <?php if($article['published_date'] !== $article['modified_date']) : ?>
+                    <small>, updated on: <?= $article['modified_date'] ?></small>
+                    <?php endif; ?>
                     <h2>
                         <a href="/<?= $article['slug'] ?>/" class="text-2xl font-bold text-gray-100 hover:text-brand-yellow"><?= $article['title'] ?></a>
                     </h2>

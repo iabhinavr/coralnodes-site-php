@@ -12,7 +12,7 @@
     </div>
 </footer>
 <script src="<?= _cdn_('/assets/highlight/highlight-2.min.js') ?>"></script>
-<script src="<?= _cdn_('/assets/frontend.js') ?>"></script>
+<script src="<?= _is_local() ? '/assets/frontend.js' : _cdn_('/assets/frontend.js') ?>"></script>
 <script>hljs.highlightAll();</script>
 </body>
 </html>

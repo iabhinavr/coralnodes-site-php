@@ -66,7 +66,7 @@ class ContentController extends MainController {
             "per_page" => 10,
             "page_no" => 1,
             "type" => 'article',
-            "fields" => ["id", "title", "excerpt", "published_date", "featured_image", "slug"]
+            "fields" => ["id", "title", "excerpt", "published_date", "modified_date", "featured_image", "slug"]
         ];
 
         if(!empty($vars['pageNo'])) {
@@ -88,7 +88,7 @@ class ContentController extends MainController {
             exit;
         }
 
-        $articles = $this->contentModel->get_contents($args);        
+        $articles = $this->contentModel->get_contents($args);       
 
         foreach($articles as $article) {
 
@@ -96,11 +96,15 @@ class ContentController extends MainController {
             $published_obj = DateTime::createFromFormat('Y-m-d H:i:s', $article['published_date']);
             $published_date = $published_obj->format('M j, Y');
 
+            $modified_obj = DateTime::createFromFormat('Y-m-d H:i:s', $article['modified_date']);
+            $modified_date = $modified_obj->format('M j, Y');
+
             $props['articles'][$id] = [
                 'id' => $article['id'],
                 'title' => $article['title'],
                 'excerpt' => $article['excerpt'],
                 'published_date' => $published_date,
+                'modified_date' => $modified_date,
                 'featured_image' => $article['featured_image'],
                 'slug' => $article['slug'],
                 'categories' => [],
@@ -145,9 +149,6 @@ class ContentController extends MainController {
             'title' => 'Articles | CoralNodes',
             'canonical' => "https://www.coralnodes.com/articles/"
         ];
-
-        
-
 
         $this->render('header', $props);
         $this->render('article-index', $props);

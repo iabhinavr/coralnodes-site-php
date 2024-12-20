@@ -132,6 +132,31 @@
         @apply grid grid-cols-2 gap-2;
     }
 
+    .topic-list {
+        columns: 2;
+        margin-top: 1em;
+    }
+
+    .topic-list li a {
+        @apply text-brand-lightcoral;
+    }
+
+    .topic-list li a:hover {
+        @apply underline;
+    }
+
+    #site-nav ul {
+        @apply site-menu flex h-full items-center;
+    }
+
+    #site-nav ul li a {
+        @apply flex h-full px-2 items-center transition;
+    }
+
+    #site-nav ul li a:hover {
+        @apply text-brand-lightcoral;
+    }
+
 }
 
 /* crimson-pro-regular - latin */

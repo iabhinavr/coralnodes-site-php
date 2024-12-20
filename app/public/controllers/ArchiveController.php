@@ -24,7 +24,7 @@ class ArchiveController extends MainController {
             "per_page" => 10,
             "page_no" => 1,
             "type" => 'article',
-            "fields" => ["id", "title", "excerpt", "published_date", "featured_image", "slug"],
+            "fields" => ["id", "title", "excerpt", "published_date", "modified_date", "featured_image", "slug"],
         ];
 
         if(!empty($vars['categoryName'])) {
@@ -67,8 +67,6 @@ class ArchiveController extends MainController {
             exit;
         }
 
-        
-
         $articles = $this->taxonomyModel->get_taxonomy_content($args);
 
         foreach($articles["result"] as $article) {
@@ -77,11 +75,15 @@ class ArchiveController extends MainController {
             $published_obj = DateTime::createFromFormat('Y-m-d H:i:s', $article['published_date']);
             $published_date = $published_obj->format('M j, Y');
 
+            $modified_obj = DateTime::createFromFormat('Y-m-d H:i:s', $article['modified_date']);
+            $modified_date = $modified_obj->format('M j, Y');
+
             $props['articles'][$id] = [
                 'id' => $article['id'],
                 'title' => $article['title'],
                 'excerpt' => $article['excerpt'],
                 'published_date' => $published_date,
+                'modified_date' => $modified_date,
                 'featured_image' => !empty($article['featured_image']) ? "https://cdn-2.coralnodes.com/coralnodes/uploads/medium/" . $article['featured_image'] : "/assets/images/default-image.jpg",
                 'slug' => $article['slug'],
             ];
@@ -96,6 +98,25 @@ class ArchiveController extends MainController {
 
         $this->render('header', $props);
         $this->render('archive', $props);
+        $this->render('footer', $props);
+    }
+
+    public function topics($vars) {
+        $props = [
+            'page_title' => 'All Topics'
+        ];
+
+        $props['seo_data'] = [
+            'title' => $props['page_title'],
+            'canonical' => ""
+        ];
+
+        $props['categories'] = $this->taxonomyModel->list_taxonomies(['type' => 'category']);
+
+        $props['tags'] = $this->taxonomyModel->list_taxonomies(['type' => 'tag']);
+
+        $this->render('header', $props);
+        $this->render('topics', $props);
         $this->render('footer', $props);
     }
 

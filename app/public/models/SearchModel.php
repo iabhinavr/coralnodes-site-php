@@ -12,8 +12,9 @@ class SearchModel extends Database {
 
     public function search_keyword (string $keyword) {
         try {
-            $stmt = $this->db_con->prepare("SELECT * FROM content WHERE MATCH(title, excerpt) AGAINST(:keyword IN NATURAL LANGUAGE MODE) AND status = 'publish'");
-            $stmt->bindParam(':keyword', $keyword);
+            $stmt = $this->db_con->prepare("SELECT id, title, slug, featured_image, published_date, modified_date, excerpt, MATCH(title, excerpt) AGAINST(:keyword1 IN NATURAL LANGUAGE MODE) as relevance FROM content WHERE MATCH(title, excerpt) AGAINST(:keyword2 IN NATURAL LANGUAGE MODE) AND status = 'publish'");
+            $stmt->bindParam(':keyword1', $keyword);
+            $stmt->bindParam(':keyword2', $keyword);
             if(!$stmt->execute()) {
                 return ["status" => false, "result" => "Error searching for the keyword"];
 
