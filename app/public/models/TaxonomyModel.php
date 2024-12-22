@@ -88,7 +88,7 @@ class TaxonomyModel extends Database
         $fields = implode(", ", $args_merged['fields']);
 
         try {
-            $stmt = $this->db_con->prepare("SELECT $fields FROM content c INNER JOIN taxonomy_relations tr ON c.id = tr.content_id INNER JOIN taxonomies t ON t.id = tr.taxonomy_id WHERE t.name = :taxonomy_name AND t.type = :taxonomy_type AND c.status = 'publish' LIMIT :limit OFFSET :offset");
+            $stmt = $this->db_con->prepare("SELECT $fields FROM content c INNER JOIN taxonomy_relations tr ON c.id = tr.content_id INNER JOIN taxonomies t ON t.id = tr.taxonomy_id WHERE t.name = :taxonomy_name AND t.type = :taxonomy_type AND c.status = 'publish' ORDER BY c.published_date DESC LIMIT :limit OFFSET :offset");
 
             $stmt->bindParam(":taxonomy_name", $args_merged['taxonomy_name']);
             $stmt->bindParam(":taxonomy_type", $args_merged['taxonomy_type']);

@@ -1,13 +1,13 @@
 <article class="single-post-article" id="article-<?= $props['id'] ?>">
     <div class="h-[90vh] lg:h-[50vh] min-h-[15rem] mb-4 bg-slate-700">
         <div class="h-full container px-2 mx-auto flex justify-center flex-col lg:max-w-3xl">
-            <h1 class="text-2xl font-bold py-4 text-brand-lightcoral">
+            <h1 class="text-3xl font-bold py-4 text-brand-lightcoral">
                 <?= $props['title'] ?>
             </h1>
             <div><small>Published by Abhinav / Last updated:
                     <?= $props['modified_date'] ?>
                 </small></div>
-            <p class="py-1 my-3 pl-3 text-2xl border-l-4 border-l-brand-yellow">
+            <p class="py-1 my-3 pl-3 text-xl border-l-4 border-l-brand-yellow">
                 <?= $props['excerpt'] ?>
             </p>
         </div>
@@ -15,7 +15,7 @@
     </div>
     <div class="post-content container mx-auto lg:max-w-3xl px-2 tracking-tight">
         <div>
-            <div class="affiliate-disclosure mb-2">
+            <div class="affiliate-disclosure mb-4">
                 <p class="!p-4 !text-base bg-slate-700 rounded-md">This article may contain affiliate links. If you buy some products using those links, I may receive monetary benefits. See affiliate disclosure <a href="/disclosure/" target="_blank" rel="noopener noreferrer">here</a></p>
             </div>
             <?= $props['content_html'] ?>
@@ -27,7 +27,7 @@
         <div class="flex items-center p-6 rounded-md bg-slate-800">
             <!-- Image on the left -->
             <div class="w-40">
-                <img src="https://cdn-2.coralnodes.com/coralnodes/uploads/<?= $props['author_bio']['featured_image'] ?>" alt="Profile Image" class="block rounded-full object-cover">
+                <img src="https://cdn-2.coralnodes.com/coralnodes/uploads/thumbnail/<?= $props['author_bio']['featured_image'] ?>" alt="Profile Image" class="block rounded-full object-cover" loading="lazy">
             </div>
 
             <!-- Title and Description on the right -->
@@ -44,7 +44,7 @@
 <?php if(!empty($props['related_content'])) : ?>
 <section>
     <div class="container mx-auto lg:max-w-3xl">
-        <h2 class="text-2xl font-firacode font-bold py-2 pl-4 border-l-brand-yellow border-l-4 mb-4">Related articles:
+        <h2 class="text-2xl font-bold py-2 pl-4 border-l-brand-yellow border-l-4 mb-4">Related articles:
         </h2>
         <ul class="grid p-4 gap-2 justify-center sm:grid-cols-3">
             
@@ -53,7 +53,7 @@
                     <a href="/<?= $r['slug'] ?>/" class="hover:text-brand-yellow">
                         <img class="block rounded-md"
                             src="https://cdn-2.coralnodes.com/coralnodes/uploads/medium/<?= $r['featured_image'] ?>"
-                            alt="<?= $r['title'] ?>">
+                            alt="<?= $r['title'] ?>" loading="lazy">
                         <span class="block text-sm py-2 font-bold">
                             <?= $r['title'] ?>
                         </span>

@@ -13,8 +13,8 @@ module.exports = {
         }
       },
       fontFamily: {
-        crimsonpro: ['crimson-pro', 'serif'],
-        firacode: ['fira-code', 'mono']
+        inter: ['inter', 'sans-serif'],
+        ubuntumono: ['ubuntu-mono', 'mono']
       }
     },
   },

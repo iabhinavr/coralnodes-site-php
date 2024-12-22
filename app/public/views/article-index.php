@@ -12,17 +12,19 @@
                 <?php endif; ?>
 
                 <div class="p-4 space-y-2 <?= empty($article['featured_image']) ? 'sm:col-span-7' : 'sm:col-span-4' ?>">
-                    <small><?= $article['published_date']?></small>
-                    <?php if($article['published_date'] !== $article['modified_date']) : ?>
-                    <small>, updated on: <?= $article['modified_date'] ?></small>
-                    <?php endif; ?>
+                    <div class="font-ubuntumono text-lg">
+                        <small><?= $article['published_date']?></small>
+                        <?php if($article['published_date'] !== $article['modified_date']) : ?>
+                        <small>, updated on: <?= $article['modified_date'] ?></small>
+                        <?php endif; ?>
+                    </div>
                     <h2>
                         <a href="/<?= $article['slug'] ?>/" class="text-2xl font-bold text-gray-100 hover:text-brand-yellow"><?= $article['title'] ?></a>
                     </h2>
 
                     <div><?= $article['excerpt'] ?></div>
 
-                    <div class="flex justify-between">
+                    <div class="flex justify-between font-ubuntumono text-lg">
                         <div>
                             <?php foreach($article['tags'] as $tag) : ?>
                                 <a href="/tag/<?= $tag['name'] ?>/" class="font-bold text-emerald-400 hover:text-brand-yellow transition">#<?= $tag['name'] ?></a>
