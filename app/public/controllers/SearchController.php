@@ -48,10 +48,14 @@ class SearchController extends MainController {
                         'title' => 'Showing results for "' . $keyword . '"'
                     ],
                 ];
+
+                // it's already sorted, so take the first element
+
+                $highest_relevance = $search_results['result'][0]['relevance'];
                 
                 foreach($search_results['result'] as $s) {
         
-                    if($s['relevance'] < 1) {
+                    if($s['relevance'] < $highest_relevance/4) {
                         continue;
                     }
                     
