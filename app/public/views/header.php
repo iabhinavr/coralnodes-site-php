@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="<?= _cdn_('/assets/highlight/styles/github-dark.min.css') ?>">
-    <link rel="stylesheet" href="<?= _is_local() ? ('/assets/style-v6.bundle.css') : _cdn_('/assets/style-v6.bundle.css') ?>">
+    <link rel="stylesheet" href="<?= _is_local() ? ('/assets/202412281.css') : _cdn_('/assets/style-v7.bundle.css') ?>">
     <title><?= _esc($props['seo_data']['title']) ?></title>
     <?php if(!empty($props['seo_data']['canonical'])) : ?>
 	<link rel="canonical" href="<?= $props['seo_data']['canonical']; ?>" />

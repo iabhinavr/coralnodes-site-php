@@ -6,7 +6,7 @@
                 <?php if (!empty($article['featured_image'])) : ?>
                 <div class="sm:col-span-3">
                     <a href="/<?= $article['slug'] ?>">
-                    <img src="https://cdn-2.coralnodes.com/coralnodes/uploads/medium/<?= $article['featured_image'] ?>" loading="lazy" alt="<?= $article['title'] ?>" class="rounded-l-xl w-full h-full object-cover">
+                    <img src="https://cdn-2.coralnodes.com/coralnodes/uploads/medium/<?= $article['featured_image'] ?>" loading="lazy" alt="<?= $article['title'] ?>" class="rounded-l-xl w-full h-full object-cover" width="800" height="450">
                     </a>
                 </div>
                 <?php endif; ?>

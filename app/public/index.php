@@ -1,6 +1,14 @@
 <?php
 
-// $start_time = hrtime(true);
+define('START_TIME', microtime(true));
+
+function log_exec_time() {
+    $end_time = microtime(true);
+    $exec_time = ($end_time - START_TIME)*1000;
+    file_put_contents(__DIR__ . "/../times.txt", $_SERVER['REQUEST_URI'] . ": " . $exec_time . "ms\n", FILE_APPEND);
+}
+
+// register_shutdown_function('log_exec_time');
 
 use DI\ContainerBuilder;
 use Symfony\Component\Dotenv\Dotenv;
@@ -109,10 +117,3 @@ switch ($routeInfo[0]) {
         break;
 
 }
-
-// $end_time = hrtime(true);
-// $execution_time = $end_time - $start_time;
-
-// $execution_time_seconds = $execution_time / 1e9;
-
-// echo $execution_time_seconds;
