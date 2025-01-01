@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="<?= _is_local() ? ('/assets/202412281.css') : _cdn_('/assets/style-v7.bundle.css') ?>">
+    <link rel="stylesheet" href="<?= _asset_url_('/assets/202412281.css') ?>">
     <title><?= _esc($props['seo_data']['title']) ?></title>
     <?php if(!empty($props['seo_data']['canonical'])) : ?>
 	<link rel="canonical" href="<?= $props['seo_data']['canonical']; ?>" />

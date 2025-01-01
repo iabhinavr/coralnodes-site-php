@@ -31,9 +31,12 @@ services:
             MYSQL_DATABASE: ${DB_NAME}
         volumes:
             - coralnodes_phpcms:/var/lib/mysql
+            - ./my_custom.cnf:/etc/mysql/mariadb.conf.d/my_custom.cnf:ro
+            - coralnodes_mysql_logs:/var/log/mysql
         ports:
             - "33096:3306"
         restart: always
 volumes:
     coralnodes_phpcms: {}
+    coralnodes_mysql_logs: {}
         
