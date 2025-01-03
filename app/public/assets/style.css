@@ -7,12 +7,28 @@
         @apply font-inter;
     }
 
+    .post-content h1 {
+        @apply text-4xl font-bold py-2 mb-2;
+    }
+
     .post-content h2 {
-        @apply text-2xl font-bold py-2 pl-4 border-l-brand-yellow border-l-4 mb-4;
+        @apply text-3xl font-bold py-2 pl-4 border-l-brand-yellow border-l-4 mb-4;
     }
 
     .post-content h3 {
-        @apply text-xl pb-4 border-b-brand-yellow border-b mb-4 inline-block clear-both;
+        @apply text-2xl pb-4 border-b-brand-yellow border-b-2 mb-4 inline-block clear-both;
+    }
+
+    .post-content h4 {
+        @apply text-xl pb-2 font-bold;
+    }
+
+    .post-content h5 {
+        @apply text-lg pb-2 font-bold;
+    }
+
+    .post-content h6 {
+        @apply text-lg pb-1;
     }
 
     .post-content pre {
