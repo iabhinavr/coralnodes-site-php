@@ -14,12 +14,12 @@
 
     </div>
     <div class="post-content container mx-auto lg:max-w-3xl px-2 tracking-tight">
-        <div>
-            <div class="affiliate-disclosure mb-4">
-                <p class="!p-4 !text-base bg-slate-700 rounded-md">This article may contain affiliate links. If you buy some products using those links, I may receive monetary benefits. See affiliate disclosure <a href="/disclosure/" target="_blank" rel="noopener noreferrer">here</a></p>
-            </div>
-            <?= $props['content_html'] ?>
+
+        <div class="affiliate-disclosure mb-4">
+            <p class="!p-4 !text-base bg-slate-700 rounded-md">This article may contain affiliate links. If you buy some products using those links, I may receive monetary benefits. See affiliate disclosure <a href="/disclosure/" target="_blank" rel="noopener noreferrer">here</a></p>
         </div>
+        <?= $props['content_html'] ?>
+
     </div>
 </article>
 <section id="author-bio" class="my-4">

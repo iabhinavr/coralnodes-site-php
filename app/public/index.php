@@ -51,6 +51,8 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
     $r->addRoute('GET', '/tag/{tagName}/', 'ArchiveController@taxonomy_content');
     $r->addRoute('GET', '/category/{categoryName}/page/{pageNo}/', 'ArchiveController@taxonomy_content');
     $r->addRoute('GET', '/tag/{tagName}/page/{pageNo}/', 'ArchiveController@taxonomy_content');
+
+    $r->addRoute('POST', '/tools/ttfb-check/', 'ToolsController@ttfb_check_post');
     
 });
 

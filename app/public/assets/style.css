@@ -48,11 +48,16 @@
     }
 
     .post-content ul {
-        @apply pb-4 pl-4 list-disc text-lg text-gray-300;
+        @apply pl-4 list-disc text-lg text-gray-300;
     }
 
     .post-content ol {
-        @apply pb-4 pl-4 list-decimal list-inside text-lg text-gray-300;
+        @apply pl-4 list-decimal list-inside text-lg text-gray-300;
+    }
+
+    .post-content > ul,
+    .post-content > ol {
+        @apply pb-4;
     }
 
     .post-content li {
