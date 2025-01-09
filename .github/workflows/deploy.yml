@@ -35,7 +35,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y rsync
-          rsync -avz --delete --exclude='.env' -e "$RSYNC_RSH" ./ abhinav@${{ secrets.VPS_HOST }}:/home/abhinav/test
+          rsync -avz --delete --exclude='.env' -e "$RSYNC_RSH" ./ abhinav@${{ secrets.VPS_HOST }}:/home/abhinav/coralnodes-site-php
 
       - name: setup environment files
         uses: appleboy/ssh-action@master
