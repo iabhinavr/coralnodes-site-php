@@ -3,7 +3,7 @@
 class MainController {
     public function render($template, $props = []) {
         ob_start();
-        include 'views/' . $template . '.php';
+        include APP_DIR . 'views/' . $template . '.php';
         $output = ob_get_clean();
         echo $output;
     }
