@@ -24,9 +24,14 @@ jobs:
           composer install
           npm install
 
+      - name: Create SSH Key File
+        run: |
+          echo "${{ secrets.VPS_KEY }}" > ~/vps_key
+          chmod 600 ~/vps_key
+
       - name: Sync project folder to VPS
         env:
-          RSYNC_RSH: "ssh -o StrictHostKeyChecking=no -i ${{ secrets.VPS_KEY }} -p ${{ secrets.VPS_PORT }}"
+          RSYNC_RSH: "ssh -o StrictHostKeyChecking=no -i ~/vps_key -p ${{ secrets.VPS_PORT }}"
         run: |
           sudo apt-get update
           sudo apt-get install -y rsync
