@@ -1,11 +1,12 @@
 <?php
 
 define('START_TIME', microtime(true));
+define('APP_DIR', __DIR__ . "/../");
 
 function log_exec_time() {
     $end_time = microtime(true);
     $exec_time = ($end_time - START_TIME)*1000;
-    file_put_contents(__DIR__ . "/../times.txt", $_SERVER['REQUEST_URI'] . ": " . $exec_time . "ms\n", FILE_APPEND);
+    file_put_contents(APP_DIR . "/logs/times.txt", $_SERVER['REQUEST_URI'] . ": " . $exec_time . "ms\n", FILE_APPEND);
 }
 
 // register_shutdown_function('log_exec_time');
@@ -16,7 +17,7 @@ use Symfony\Component\Dotenv\Dotenv;
 define(constant_name: "CDN_URL", value: "https://cdn.coralnodes.com");
 
 require '../vendor/autoload.php';
-require './lib/utils.php';
+require '../lib/utils.php';
 
 $dotenv = new Dotenv();
 $dotenv->load(__DIR__ . '/../.env');
@@ -35,7 +36,7 @@ else {
 }
 
 $containerBuilder = new ContainerBuilder();
-$containerBuilder->addDefinitions(__DIR__ . '/definitions.php');
+$containerBuilder->addDefinitions(__DIR__ . '/../definitions.php');
 $container = $containerBuilder->build();
 
 $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
