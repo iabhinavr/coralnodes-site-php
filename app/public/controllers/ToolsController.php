@@ -22,9 +22,20 @@ class ToolsController extends MainController
         }
     }
 
+    public function ttfb_check_page() {
+        $props = [];
+        $props["seo_data"] = [];
+        $props["seo_data"]["title" ] = "Check TTFB";
+
+        $this->render('header', $props);
+        $this->render('ttfb-check', $props);
+        $this->render('footer', $props);
+    }
+
     public function ttfb_check_post()
     {
         header('Content-Type: application/json');
+
         /**
          * region and url are required
          */
