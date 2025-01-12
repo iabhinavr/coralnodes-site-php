@@ -10,46 +10,39 @@
             <p class="font-bold text-lg mt-4 text-center">select regions:</p>
             <div class="my-2 text-lg flex">
                 <div class="checkbox-group">
-                    <input type="checkbox" name="cities[]" value="Bangalore" id="bangalore" checked>
-                    <label for="mumbai">Bangalore</label>
+                    <input type="checkbox" name="locations[]" value="bangalore" id="location-bangalore" checked>
+                    <label for="location-bangalore">Bangalore</label>
                 </div>
 
                 <div class="checkbox-group">
-                    <input type="checkbox" name="cities[]" value="UAE" id="uae" checked>
-                    <label for="mumbai">UAE</label>
+                    <input type="checkbox" name="locations[]" value="uae" id="location-uae" checked>
+                    <label for="location-uae">UAE</label>
                 </div>
                 
                 <div class="checkbox-group">
-                    <input type="checkbox" name="cities[]" value="London" id="london" checked>
-                    <label for="london">London</label>
+                    <input type="checkbox" name="locations[]" value="london" id="location-london" checked>
+                    <label for="location-london">London</label>
                 </div>
 
                 <div class="checkbox-group">
-                    <input type="checkbox" name="cities[]" value="New York" id="newyork" checked>
-                    <label for="newyork">New York</label>
+                    <input type="checkbox" name="locations[]" value="newyork" id="location-newyork" checked>
+                    <label for="location-newyork">New York</label>
                 </div>
 
                 <div class="checkbox-group">
-                    <input type="checkbox" name="cities[]" value="Sydney" id="sydney">
-                    <label for="sydney">Sydney</label>
+                    <input type="checkbox" name="locations[]" value="sydney" id="location-sydney">
+                    <label for="location-sydney">Sydney</label>
                 </div>
 
                 <div class="checkbox-group">
-                    <input type="checkbox" name="cities[]" value="Sao Paulo" id="saopaulo">
-                    <label for="saopaulo">Sao Paulo</label>
+                    <input type="checkbox" name="locations[]" value="saopaulo" id="location-saopaulo">
+                    <label for="location-saopaulo">Sao Paulo</label>
                 </div>
 
                 <div class="checkbox-group">
-                    <input type="checkbox" name="cities[]" value="Cape Town" id="capetown">
-                    <label for="saopaulo">Cape Town</label>
-                </div>
-                
-
-                
-
-                
-
-                
+                    <input type="checkbox" name="locations[]" value="capetown" id="location-capetown">
+                    <label for="location-capetown">Cape Town</label>
+                </div>         
             </div>
         </form>
     </div>
