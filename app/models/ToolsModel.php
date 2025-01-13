@@ -11,13 +11,12 @@ class ToolsModel extends Database {
 
     public function create_ttfb_test($data): array {
         try {
-            $stmt = $this->db_con->prepare("INSERT INTO ttfb_tests (test_key, test_url, test_user, test_env, test_locations, test_date) VALUES (:test_key, :test_url, :test_user, :test_env, :test_locations, :test_date)");
+            $stmt = $this->db_con->prepare("INSERT INTO ttfb_tests (test_key, test_user, test_env, test_date, test_hash) VALUES (:test_key, :test_user, :test_env, :test_date, :test_hash)");
             $stmt->bindParam(":test_key", $data["test_key"]);
-            $stmt->bindParam(":test_url", $data["test_url"]);
             $stmt->bindParam(":test_user", $data["test_user"]);
             $stmt->bindParam(":test_env", $data["test_env"]);
-            $stmt->bindParam(":test_locations", $data["test_locations"]);
             $stmt->bindParam(":test_date", $data["test_date"]);
+            $stmt->bindParam(":test_hash", $data["test_hash"]);
             if($stmt->execute()) {
                 return ["status" => true];
             }
@@ -44,5 +43,23 @@ class ToolsModel extends Database {
         } catch (PDOException $e) {
             return ["status" => false, "result" => "error fetching test"];
         }
+    }
+
+    public function verify_ttfb_test_hash($test_key, $string_to_hash) {
+
+        $get_test_resp = $this->get_ttfb_test($test_key);
+
+        if($get_test_resp["status"] !== true) {
+           return $get_test_resp; 
+        }
+
+        $test = $get_test_resp["result"];
+
+        $input_hash = hash('sha256', $string_to_hash);
+
+        if(hash_equals($test["test_hash"], $input_hash)) {
+            return ["status" => true, "result" => "hash successfully verified", "test" => $test];
+        }
+        return ["status" => false, "result" => "hash verification failed"];
     }
 }

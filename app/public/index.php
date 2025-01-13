@@ -55,6 +55,7 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
 
     $r->addRoute('GET', '/tools/ttfb-check/', 'ToolsController@ttfb_check_page');
     $r->addRoute('POST', '/tools/ttfb-check/', 'ToolsController@ttfb_check_post');
+    $r->addRoute('GET', '/tools/ttfb-test-stream/', 'ToolsController@ttfb_test_stream');
     
 });
 
