@@ -11,8 +11,12 @@
         </ul>
     </div>
 </footer>
-<script src="<?= _cdn_('/assets/highlight/highlight-2.min.js') ?>"></script>
-<script src="<?= _is_local() ? '/assets/frontend.js' : _cdn_('/assets/frontend.js') ?>"></script>
+<script src="<?= _asset_url_('/assets/highlight/highlight-2.min.js') ?>"></script>
+<script src="<?= _asset_url_("/assets/frontend.js") ?>"></script>
 <script>hljs.highlightAll();</script>
+<?php if(isset($props["tools_page"])) : ?>
+<script src="<?= _asset_url_("/assets/vue.global.js") ?>"></script>
+<script src="<?= _asset_url_("/assets/tools.js") ?>"></script>
+<?php endif; ?>
 </body>
 </html>

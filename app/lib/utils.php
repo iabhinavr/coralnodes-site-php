@@ -32,8 +32,5 @@ function _asset_url_($rel_url) {
 }
 
 function _cdn_(string $rel_url): string {
-    if (isset($_ENV['APP_ENV']) && $_ENV['APP_ENV'] === 'local') {
-        return CDN_URL . $rel_url;
-    }
     return CDN_URL . $rel_url;
 }

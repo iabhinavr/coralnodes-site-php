@@ -37,9 +37,9 @@
       test_url: "https://www.coralnodes.com"
     }
 
-    const queryString = new URLSearchParams(params).toString();
+    const queryString = "test_key=66bb2b7c841156002b8f13aaea03e9c5&test_date=2025-01-12 21:25:43&test_locations[]=london&test_locations[]=saopaulo&test_url=https://www.coralnodes.com";
 
-    const eventSource = new EventSource(`http://coralnodes.local/tools/ttfb-test-stream/`);
+    const eventSource = new EventSource(`http://coralnodes.local/tools/ttfb-test-stream/?${queryString}`);
 
     const statusEl = document.getElementById("status");
     const outputEl = document.getElementById("output");

@@ -32,6 +32,7 @@ class ToolsController extends MainController
         $props = [];
         $props["seo_data"] = [];
         $props["seo_data"]["title"] = "Check TTFB";
+        $props["tools_page"] = true;
 
         $this->render('header', $props);
         $this->render('ttfb-check', $props);
@@ -57,31 +58,34 @@ class ToolsController extends MainController
 
         echo "retry: 1000\n"; // Reconnection time in milliseconds
         echo "\n"; // Initial padding
+        
 
-        for ($i = 0; $i < 5; $i++) {
-            echo "event: myreply\n";
-            echo "data: Hello $i\n\n";
-            // ob_flush();
-            flush();
-            sleep(1);
-        }
+        if(empty($_GET["test_key"]) ||
+            empty($_GET["test_url"]) ||
+            empty($_GET["test_locations"]) ||
+            empty($_GET["test_date"])) {
+                $msg = json_encode(["error" => "required fields missing"]);
+                echo "event: myreply\n";
+                echo "data: $msg\n\n";
+                // ob_flush();
+                flush();
+            }
+            else {
+                $data = [
+                    "test_key" => $_GET["test_key"],
+                    "test_url" => $_GET["test_url"],
+                    "test_locations" => $_GET["test_locations"],
+                    "test_date" => $_GET["test_date"]
+                ];
+                $this->run_ttfb_test($data);
 
-        // Send a final message before closing
-        echo "event: [end]\n";
-        echo "data: Goodbye!\n\n";
-        // ob_flush();
-        flush();
+                // Send a final message before closing
+                echo "event: [end]\n";
+                echo "data: Goodbye!\n\n";
+                // ob_flush();
+                flush();
+            }
 
-        exit;
-        // if(isset($_POST["test_key"])) {
-        //     $data = [
-        //         "test_key" => $_POST["test_key"],
-        //         "test_url" => $_POST["test_url"],
-        //         "test_locations" => $_POST["test_locations"],
-        //         "test_date" => $_POST["test_date"]
-        //     ];
-        //     $this->run_ttfb_test($data);
-        // }
     }
 
     public function ttfb_check_post()
@@ -151,35 +155,6 @@ class ToolsController extends MainController
     private function run_ttfb_test($data = null)
     {
 
-        header("Content-Type: text/event-stream");
-        header("Cache-Control: no-cache");
-        header("Connection: keep-alive");
-
-        // Disable output buffering
-        ini_set('output_buffering', 'off');
-        ini_set('zlib.output_compression', 'off');
-        ini_set('implicit_flush', 'on');
-        ob_implicit_flush(true);
-
-        echo "retry: 1000\n"; // Reconnection time in milliseconds
-        echo "\n"; // Initial padding
-
-        for ($i = 0; $i < 5; $i++) {
-            echo "event: myreply\n";
-            echo "data: Hello $i\n\n";
-            ob_flush();
-            flush();
-            sleep(1);
-        }
-
-        // Send a final message before closing
-        echo "event: [end]\n";
-        echo "data: Goodbye!\n\n";
-        ob_flush();
-        flush();
-
-        exit;
-
         $string_to_hash = $data["test_date"];
         $string_to_hash .= $data["test_url"];
 
@@ -190,8 +165,11 @@ class ToolsController extends MainController
         $hash_verification = $this->toolsModel->verify_ttfb_test_hash($data["test_key"], $string_to_hash);
 
         if ($hash_verification["status"] !== true) {
-            echo json_encode($hash_verification);
-            exit;
+            $msg = json_encode($hash_verification);
+            echo "event: myreply\n";
+            echo "data: $msg\n\n";
+            flush();
+            return false;
         }
 
         $test = $hash_verification["test"];
@@ -216,22 +194,18 @@ class ToolsController extends MainController
 
         foreach ($data["test_locations"] as $location) {
 
-            echo "event: testing $location...\n";
-            ob_flush();
-            flush();
+            if(array_key_exists($location, $lambda_cities_regions)) {
+                $r = $this->invoke_lambda_function('ttfbCheck', $lambda_cities_regions[$location], ['url' => $data["test_url"]]);
 
-            // if(array_key_exists($location, $lambda_cities_regions)) {
-            //     $r = $this->invoke_lambda_function('ttfbCheck', $lambda_cities_regions[$location], ['url' => $data["test_url"]]);
+                $response_array = json_decode($r, true);
+                $msg = json_encode(array_merge(["location" => $location], $response_array));
 
-            //     $response_array = json_decode($r, true);
+                echo "event: myreply\n";
+                echo "data: $msg\n\n";
+                // ob_flush();
+                flush();
 
-            //     echo "data: " . json_encode(array_merge(["location" => $location], $response_array)) . "\n\n";
-            //     ob_flush();
-            //     flush();
-
-
-
-            // }
+            }
 
             sleep(1);
 
