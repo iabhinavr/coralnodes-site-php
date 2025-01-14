@@ -28,5 +28,17 @@
                 </div>        
             </div>
         </form>
+
+        <div v-if="started">
+            <h3 v-model="sse.status">Status: {{sse.status}}</h3>
+
+            <h3>Results</h3>
+            <ul>
+                <li v-for="(r, index) in sse.replies" :key="index">
+                    {{r}}
+                </li>
+            </ul>
+        </div>
+        
     </div>
 </section>

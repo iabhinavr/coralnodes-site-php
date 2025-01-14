@@ -64,8 +64,8 @@ class ToolsController extends MainController
             empty($_GET["test_url"]) ||
             empty($_GET["test_locations"]) ||
             empty($_GET["test_date"])) {
-                $msg = json_encode(["error" => "required fields missing"]);
-                echo "event: myreply\n";
+                $msg = json_encode(["status" => false, "error" => "required fields missing"]);
+                echo "event: [end]\n";
                 echo "data: $msg\n\n";
                 // ob_flush();
                 flush();
@@ -81,7 +81,7 @@ class ToolsController extends MainController
 
                 // Send a final message before closing
                 echo "event: [end]\n";
-                echo "data: Goodbye!\n\n";
+                echo "data: Test finished\n\n";
                 // ob_flush();
                 flush();
             }
@@ -133,13 +133,15 @@ class ToolsController extends MainController
             "test_user" => 0,
             "test_env" => _is_local() ? 'staging' : 'production',
             "test_date" => $test_date,
-            "test_hash" => hash('sha256', $string_to_hash)
+            "test_hash" => hash('sha256', $string_to_hash),
+            "test_status" => "initiated"
         ];
 
         $test_creation = $this->toolsModel->create_ttfb_test($data);
 
         if ($test_creation["status"] === true) {
             echo json_encode([
+                "status" => true,
                 "test_key" => $data["test_key"],
                 "test_url" => $data["test_url"],
                 "test_locations" => $data["test_locations"],
@@ -147,7 +149,7 @@ class ToolsController extends MainController
             ]);
             exit;
         } else {
-            echo json_encode(["error" => $test_creation["result"]]);
+            echo json_encode($test_creation);
             exit;
         }
     }
@@ -174,6 +176,16 @@ class ToolsController extends MainController
 
         $test = $hash_verification["test"];
 
+        if($test["test_status"] !== "initiated") {
+            $msg = json_encode(["status" => false, "error" => "test has already run"]);
+            echo "event: myreply\n";
+            echo "data: $msg\n\n";
+            flush();
+            return false;
+        }
+
+        $this->toolsModel->set_ttfb_test_status($test["test_key"], "running");
+
 
         $lambda_cities_regions = [
             "uae" => "me-central",
@@ -195,10 +207,9 @@ class ToolsController extends MainController
         foreach ($data["test_locations"] as $location) {
 
             if(array_key_exists($location, $lambda_cities_regions)) {
-                $r = $this->invoke_lambda_function('ttfbCheck', $lambda_cities_regions[$location], ['url' => $data["test_url"]]);
+                $response = $this->invoke_lambda_function('ttfbCheck', $lambda_cities_regions[$location], ['url' => $data["test_url"]]);
 
-                $response_array = json_decode($r, true);
-                $msg = json_encode(array_merge(["location" => $location], $response_array));
+                $msg = json_encode(array_merge(["location" => $location], $response));
 
                 echo "event: myreply\n";
                 echo "data: $msg\n\n";
@@ -210,6 +221,8 @@ class ToolsController extends MainController
             sleep(1);
 
         }
+
+        $this->toolsModel->set_ttfb_test_status($test["test_key"], "completed");
 
     }
 
@@ -232,13 +245,13 @@ class ToolsController extends MainController
             $decodedResponse = json_decode($responsePayload, true);
 
             if (json_last_error() === JSON_ERROR_NONE) {
-                return $responsePayload;
+                return $decodedResponse;
             } else {
-                return json_encode(["error" => "Error decoding JSON: " . json_last_error_msg()]);
+                return ["status" => false, "error" => "Error decoding JSON: " . json_last_error_msg()];
             }
 
         } catch (AwsException $e) {
-            return json_encode(["error" => "Error invoking Lambda: " . $e->getMessage()]);
+            return ["status" => false, "error" => "error connecting remote"];
         }
     }
 

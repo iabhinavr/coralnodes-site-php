@@ -11,19 +11,20 @@ class ToolsModel extends Database {
 
     public function create_ttfb_test($data): array {
         try {
-            $stmt = $this->db_con->prepare("INSERT INTO ttfb_tests (test_key, test_user, test_env, test_date, test_hash) VALUES (:test_key, :test_user, :test_env, :test_date, :test_hash)");
+            $stmt = $this->db_con->prepare("INSERT INTO ttfb_tests (test_key, test_user, test_env, test_date, test_hash, test_status) VALUES (:test_key, :test_user, :test_env, :test_date, :test_hash, :test_status)");
             $stmt->bindParam(":test_key", $data["test_key"]);
             $stmt->bindParam(":test_user", $data["test_user"]);
             $stmt->bindParam(":test_env", $data["test_env"]);
             $stmt->bindParam(":test_date", $data["test_date"]);
             $stmt->bindParam(":test_hash", $data["test_hash"]);
+            $stmt->bindParam(":test_status", $data["test_status"]);
             if($stmt->execute()) {
                 return ["status" => true];
             }
             return ["status" => false, "result" => "error creating test"];
         }
         catch(PDOException $e) {
-            return ["status" => false, "result" => $e->getMessage()];
+            return ["status" => false, "result" => "error creating test"];
         }
     }
 
@@ -61,5 +62,20 @@ class ToolsModel extends Database {
             return ["status" => true, "result" => "hash successfully verified", "test" => $test];
         }
         return ["status" => false, "result" => "hash verification failed"];
+    }
+
+    public function set_ttfb_test_status($test_key, $status): array {
+        try {
+            $stmt = $this->db_con->prepare("UPDATE ttfb_tests SET test_status = :test_status WHERE test_key = :test_key");
+            $stmt->bindParam(":test_status", $status);
+            $stmt->bindParam(":test_key", $test_key);
+            if($stmt->execute()) {
+                return ["status" => true, "result" => "test status changed to $status"];
+            }
+            return ["status" => false, "result" => "error setting test status"];
+        }
+        catch(PDOException $e) {
+            return ["status" => false, "result" => "error setting test status"];
+        }
     }
 }
