@@ -6,19 +6,26 @@ const app = Vue.createApp({
                 locations: ['bangalore', 'uae', 'london', 'newyork'],
             },
             regions: {
-                bangalore: 'Bangalore',
-                uae: 'UAE',
-                london: 'London',
-                newyork: 'New York',
-                sydney: 'Sydney',
-                saopaulo: 'Sao Paulo',
-                capetown: 'Cape Town',
+                bangalore: {title: 'Bangalore'},
+                uae: {title: 'UAE'},
+                london: {title: 'London'},
+                newyork: {title: 'New York'},
+                sydney: {title: 'Sydney'},
+                saopaulo: {title: 'Sao Paulo'},
+                capetown: {title: 'Cape Town'},
             },
             sse: {
-                status: "",
-                replies: [],
+                testError: null,
+                progressMsg: "Initializing test...",
+                locResults: [
+                    JSON.parse(localStorage.getItem('reply_london')),
+                    JSON.parse(localStorage.getItem('reply_saopaulo')),
+                    JSON.parse(localStorage.getItem('reply_uae'))
+                ],
             },
             started: false,
+            expandedRows: [],
+            formDisabled: false,
         };
     },
     methods: {
@@ -53,15 +60,28 @@ const app = Vue.createApp({
             eventSource.onerror = () => {
               this.sse.status = ("Error (connection lost or failed)");
             };
+
+            eventSource.addEventListener('testError', (event) => {
+                const data = JSON.parse(event.data);
+                console.log(event.data);
+                console.log(data);
+                this.sse.testError.push(data);
+            });
+
+            eventSource.addEventListener('progressMsg', (event) => {
+                this.sse.progressMsg = event.data;
+            });
         
-            eventSource.addEventListener('myreply', (event) => {
+            eventSource.addEventListener('locResult', (event) => {
               const data = JSON.parse(event.data);
-              this.sse.replies.push(data);
+              console.log(event.data);
+              console.log(data);
+              this.sse.locResults.push(data);
             });
         
             eventSource.addEventListener('[end]', (event) => {
               const data = event.data;
-              this.sse.status = (data);
+              this.sse.progressMsg = data;
               eventSource.close();
             });
 
@@ -72,6 +92,11 @@ const app = Vue.createApp({
         async submitForm() {
             console.log('submitForm...');
             this.started = true;
+            this.sse.testError = null;
+            this.sse.progressMsg = null;
+            this.sse.locResults = [];
+            this.sse.expandedRows = [];
+            this.formDisabled = true;
             try {
                 const formData = new FormData();
                 formData.append("url", this.formData.url);
@@ -91,6 +116,48 @@ const app = Vue.createApp({
                 console.error('Error:', error);
             }
         },
+        getSpeedClass(ttfb, isSpeed) {
+            let res = false;
+            switch (isSpeed) {
+                case 'excellent':
+                    if(ttfb < 200) 
+                        res = true;
+                    break;
+                case 'fast':
+                    if(ttfb < 500 && ttfb >= 200)
+                        res = true;
+                    break;
+                case 'average':
+                    if (ttfb < 1000 && ttfb >= 500)
+                        res = true;
+                    break;
+                case 'slow':
+                    if (ttfb < 2000 && ttfb >= 1000)
+                        res = true;
+                    break;
+                case 'poor':
+                    if(ttfb >= 2000)
+                        res = true;
+                    break;
+                default:
+                    res = false;
+            }
+            return res;
+        },
+        toggleExpansion(index) {
+            if(this.expandedRows.includes(index)) {
+                this.expandedRows = this.expandedRows.filter((i) => i !== index);
+            }
+            else {
+                this.expandedRows.push(index);
+            }
+        },
+        isExpanded(index) {
+            if(this.expandedRows.includes(index)) {
+                return true;
+            }
+            return false;
+        }
     },
 });
 app.mount('#vue-app');

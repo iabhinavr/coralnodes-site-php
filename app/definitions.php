@@ -13,6 +13,7 @@ include __DIR__ . '/models/ContentMetadataModel.php';
 include __DIR__ . '/models/SearchModel.php';
 include __DIR__ . '/models/SitemapModel.php';
 include __DIR__ . '/models/ToolsModel.php';
+include __DIR__ . '/models/ToolsMetadataModel.php';
 include __DIR__ . '/controllers/MainController.php';
 include __DIR__ . '/controllers/HomeController.php';
 include __DIR__ . '/controllers/ContentController.php';
@@ -62,7 +63,7 @@ return [
     },
 
     'ToolsController' => create(ToolsController::class)
-        ->constructor(get('LambdaClientFactory'), get('ToolsModel')),
+        ->constructor(get('LambdaClientFactory'), get('ToolsModel'), get('ToolsMetadataModel')),
 
     
 ];

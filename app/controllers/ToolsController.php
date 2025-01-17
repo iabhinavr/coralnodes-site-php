@@ -10,13 +10,16 @@ class ToolsController extends MainController
 
     private $lambdaClientFactory;
     private $toolsModel;
+    private $toolsMetadataModel;
 
     public function __construct(
         callable $lambdaClientFactory,
-        ToolsModel $toolsModel
+        ToolsModel $toolsModel,
+        ToolsMetadataModel $toolsMetadataModel
     ) {
         $this->lambdaClientFactory = $lambdaClientFactory;
         $this->toolsModel = $toolsModel;
+        $this->toolsMetadataModel = $toolsMetadataModel;
     }
 
     public function main($method, $vars = null)
@@ -168,7 +171,7 @@ class ToolsController extends MainController
 
         if ($hash_verification["status"] !== true) {
             $msg = json_encode($hash_verification);
-            echo "event: myreply\n";
+            echo "event: testError\n";
             echo "data: $msg\n\n";
             flush();
             return false;
@@ -178,7 +181,7 @@ class ToolsController extends MainController
 
         if($test["test_status"] !== "initiated") {
             $msg = json_encode(["status" => false, "error" => "test has already run"]);
-            echo "event: myreply\n";
+            echo "event: testError\n";
             echo "data: $msg\n\n";
             flush();
             return false;
@@ -188,7 +191,7 @@ class ToolsController extends MainController
 
 
         $lambda_cities_regions = [
-            "uae" => "me-central",
+            "uae" => "me-central-1",
             "london" => "eu-west-2",
             "sydney" => "ap-southeast-2",
             "saopaulo" => "sa-east-1",
@@ -204,23 +207,58 @@ class ToolsController extends MainController
             ]
         ];
 
+        $warmups = [];
+
+        echo "event: progressMsg\n";
+        echo "data: Getting things ready...\n\n";
+        flush();
+
+        foreach($data["test_locations"] as $location) {
+            if(array_key_exists($location, $lambda_cities_regions)) {
+                $warmups[$location] = $this->warmup_lambda_function(["function_name" => "ttfbCheck", "region" => $lambda_cities_regions[$location]]);
+            }
+        }
+
+        echo "event: progressMsg\n";
+        echo "data: Running test...\n\n";
+        flush();
+
         foreach ($data["test_locations"] as $location) {
 
             if(array_key_exists($location, $lambda_cities_regions)) {
+
+                if($warmups[$location]["status"] !== true) {
+                    $msg = json_encode(["location" => $location, "status" => false, "error" => "could not connect"]);
+
+                    echo "event: locResult\n";
+                    echo "data: $msg\n\n";
+                    // ob_flush();
+                    flush();
+
+                    continue;
+                }
+
+                echo "event: progressMsg\n";
+                echo "data: Testing from $location...\n\n";
+                flush();
+            
                 $response = $this->invoke_lambda_function('ttfbCheck', $lambda_cities_regions[$location], ['url' => $data["test_url"]]);
 
                 $msg = json_encode(array_merge(["location" => $location], $response));
 
-                echo "event: myreply\n";
+                echo "event: locResult\n";
                 echo "data: $msg\n\n";
                 // ob_flush();
                 flush();
 
+                sleep(1);
             }
 
-            sleep(1);
-
         }
+
+        echo "event: progressMsg\n";
+        echo "data: wrapping up...\n\n";
+        flush();
 
         $this->toolsModel->set_ttfb_test_status($test["test_key"], "completed");
 
@@ -233,9 +271,7 @@ class ToolsController extends MainController
 
         $params = [
             'FunctionName' => $function_name,
-            'Payload' => json_encode([
-                'url' => $data["url"]
-            ]),
+            'Payload' => json_encode($data),
         ];
 
         try {
@@ -282,8 +318,31 @@ class ToolsController extends MainController
 
     }
 
-    private function warmup_lambda_function($function_name, $region, $data)
+    private function warmup_lambda_function($fn)
     {
+        $data = [
+            "warmup" => true
+        ];
+        
+        $response = $this->invoke_lambda_function($fn["function_name"], $fn["region"], $data);
+
+        return $response;
+    }
+
+    private function ttfb_rate_limiter() {
+        $year = date('Y');
+        $month = date('m');
+        $day = date('d');
+        $hour = date('H');
+
+        $envn = _is_local() ? "staging" : "prod";
+
+        $hour_key = "ttfb_check_count_{$year}_{$month}_{$day}_{$hour}_{$envn}";
+        $day_key = "ttfb_check_count_{$year}_{$month}_{$day}_{$envn}";
+        $month_key = "ttfb_check_count_{$year}_{$month}_{$envn}";
+    }
+
+    private function ttfb_rate_updater() {
 
     }
 }

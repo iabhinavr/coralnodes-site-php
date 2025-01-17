@@ -6,4 +6,6 @@ log_output = FILE
 log-bin=/var/log/mysql/binlog
 binlog-format=STATEMENT        # Use STATEMENT format for detailed changes
 server-id=1              # Required for binary logging
-expire-logs-days=7       # Automatically delete logs older than 7 days
+expire-logs-days=0       # do not delete logs
+# Disable binary log flushing on restart
+sync_binlog = 0
