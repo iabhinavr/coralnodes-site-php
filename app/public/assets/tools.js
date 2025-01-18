@@ -62,10 +62,8 @@ const app = Vue.createApp({
             };
 
             eventSource.addEventListener('testError', (event) => {
-                const data = JSON.parse(event.data);
-                console.log(event.data);
-                console.log(data);
-                this.sse.testError.push(data);
+                this.sse.testError = event.data;
+                eventSource.close();
             });
 
             eventSource.addEventListener('progressMsg', (event) => {
@@ -86,8 +84,9 @@ const app = Vue.createApp({
             });
 
             setTimeout(() => {
+                this.sse.progressMsg = "Test timed out";
                 eventSource.close();
-            }, 60000);
+            }, 120000);
         },
         async submitForm() {
             console.log('submitForm...');

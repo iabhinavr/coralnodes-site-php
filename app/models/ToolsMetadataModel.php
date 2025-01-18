@@ -13,7 +13,7 @@ class ToolsMetadataModel extends Database {
             $stmt = $this->db_con->prepare("SELECT meta_value FROM tools_metadata WHERE meta_key = :meta_key");
             $stmt->bindParam(":meta_key", $meta_key);
             $stmt->execute();
-            $result = $stmt->fetch();
+            $result = $stmt->fetchColumn();
 
             if(!$result) {
                 return ["status" => false, "errorCode" => "missing", "error" => "meta key does not exist"];
@@ -55,5 +55,41 @@ class ToolsMetadataModel extends Database {
             return ["status" => false, "error" => "could not update metadata"];
         }
     }
+
+    public function incrementTtfbTestCount($meta_key, $max_value = null) {
+        try {
+
+            $this->db_con->beginTransaction();
+    
+
+            $stmt = $this->db_con->prepare("SELECT meta_value FROM tools_metadata WHERE meta_key = :meta_key FOR UPDATE");
+            $stmt->bindParam(":meta_key", $meta_key);
+            $stmt->execute();
+            $current_value = $stmt->fetchColumn();
+    
+            if ($current_value === false) {
+                $this->db_con->rollBack();
+                return ["status" => false, "error" => "meta_key does not exist"];
+            }
+    
+            $current_int_value = (int)$current_value;
+    
+            if ($max_value !== null && $current_int_value >= $max_value) {
+                $this->db_con->rollBack();
+                return ["status" => false, "error" => "limit exceeded"];
+            }
+    
+            $stmt = $this->db_con->prepare("UPDATE tools_metadata SET meta_value = CAST(CAST(meta_value AS UNSIGNED) + 1 AS CHAR) WHERE meta_key = :meta_key");
+            $stmt->bindParam(":meta_key", $meta_key);
+            $stmt->execute();
+    
+            $this->db_con->commit();
+            return ["status" => true, "result" => "ttfb test count incremented"];
+        } catch (PDOException $e) {
+            $this->db_con->rollBack();
+            return ["status" => false, "error" => "could not increment metadata"];
+        }
+    }
+    
 
 }

@@ -78,4 +78,15 @@ class ToolsModel extends Database {
             return ["status" => false, "result" => "error setting test status"];
         }
     }
+
+    public function getTtfbTestCountLast30Mins() {
+        try {
+            $stmt = $this->db_con->query("SELECT COUNT(*) as count FROM ttfb_tests WHERE test_date >= NOW() - INTERVAL 30 MINUTE");
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result['count'];
+        }
+        catch(PDOException $e) {
+            return false;
+        }
+    }
 }
