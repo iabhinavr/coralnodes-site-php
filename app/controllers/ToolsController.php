@@ -1,6 +1,7 @@
 <?php
 
 use Aws\Exception\AwsException;
+use GuzzleHttp\Promise\Utils;
 
 class ToolsController extends MainController
 {
@@ -213,10 +214,12 @@ class ToolsController extends MainController
 
     private function run_ttfb_test($data, $test)
     {
+        $run_start_time = microtime(true);
 
         $this->toolsModel->set_ttfb_test_status($test["test_key"], "running");
 
         $lambda_cities_regions = [
+            "mumbai" => "ap-south-1",
             "uae" => "me-central-1",
             "london" => "eu-west-2",
             "sydney" => "ap-southeast-2",
@@ -229,56 +232,129 @@ class ToolsController extends MainController
             "newyork" => $_ENV["DO_SERVERLESS_FUNCTION_URL_TTFB_CHECK_NEWYORK"]
         ];
 
-        $warmups = [];
-
+        $getting_up_time = (microtime(true) - $run_start_time) * 1000;
         echo "event: progressMsg\n";
-        echo "data: Getting things ready...\n\n";
+        echo "data: getting up at $getting_up_time...\n\n";
         flush();
+
+        $warmups = [];
+        $warmup_promises = [];
 
         foreach($data["test_locations"] as $location) {
             if(array_key_exists($location, $lambda_cities_regions)) {
                 echo "event: progressMsg\n";
                 echo "data: pinging $location...\n\n";
                 flush();
-                $warmups[$location] = $this->warmup_lambda_function(["function_name" => "ttfbCheck", "region" => $lambda_cities_regions[$location]]);
+                $warmup_promises[$location] = $this->warmup_lambda_function(["function_name" => "ttfbCheck", "region" => $lambda_cities_regions[$location]]);
+
             }
         }
 
+        $warming_up_time = (microtime(true) - $run_start_time) * 1000;
         echo "event: progressMsg\n";
-        echo "data: Running test...\n\n";
+        echo "data: warming up at $warming_up_time...\n\n";
         flush();
 
-        foreach ($data["test_locations"] as $location) {
+        $warmup_responses = Utils::settle($warmup_promises)->wait();
 
+        $warming_up_finished_time = (microtime(true) - $run_start_time) * 1000;
+        echo "event: progressMsg\n";
+        echo "data: warming up finished at $warming_up_finished_time...\n\n";
+        flush();
+
+        foreach($warmup_responses as $location => $warmup_response) {
+            if($warmup_response['state'] === 'fulfilled') {
+                $result = $warmup_response['value'];
+                $payload_stream = $result['Payload'];
+                $response_data = $payload_stream->getContents();
+
+                $decoded_response = json_decode($response_data, true);
+
+                if (json_last_error() === JSON_ERROR_NONE) {
+                    $warmups[$location] = $decoded_response;
+                } else {
+                    $warmups[$location] = ["status" => false, "error" => "error decoding json"];
+                }
+                
+            }
+            else {
+                $warmups[$location] = ["status" => false, "error" => $warmup_response["reason"]];
+            }
+        }
+
+        $running_test_time = (microtime(true) - $run_start_time) * 1000;
+        echo "event: progressMsg\n";
+        echo "data: running test at $running_test_time...\n\n";
+        flush();
+
+        $promises = [];
+
+        foreach($data["test_locations"] as $location) {
             if(array_key_exists($location, $lambda_cities_regions)) {
-
-                if($warmups[$location]["status"] !== true) {
-                    $msg = json_encode(["location" => $location, "status" => false, "error" => "could not connect"]);
-
+                if(!$warmups[$location]["status"]) {
+                    $msg = json_encode(array_merge(["location" => $location], $warmups[$location]));
                     echo "event: locResult\n";
                     echo "data: $msg\n\n";
                     // ob_flush();
                     flush();
-
                     continue;
                 }
-
-                echo "event: progressMsg\n";
-                echo "data: Testing from $location...\n\n";
-                flush();
+                // echo "event: progressMsg\n";
+                // echo "data: Testing from $location...\n\n";
+                // flush();
             
-                $response = $this->invoke_lambda_function('ttfbCheck', $lambda_cities_regions[$location], ['url' => $data["test_url"]]);
-
-                $msg = json_encode(array_merge(["location" => $location], $response));
-
-                echo "event: locResult\n";
-                echo "data: $msg\n\n";
-                // ob_flush();
-                flush();
-
-                sleep(1);
+                $promises[$location] = $this->invoke_lambda_function('ttfbCheck', $lambda_cities_regions[$location], ['url' => $data["test_url"]]);
             }
-            else if(array_key_exists($location, $do_function_urls)) {
+        }
+
+        $waiting_responses_time = (microtime(true) - $run_start_time) * 1000;
+        echo "event: progressMsg\n";
+        echo "data: starting to wait for responses at $waiting_responses_time...\n\n";
+        flush();
+
+        foreach ($promises as $location => $promise) {
+            $promise->then(
+                function ($result) use ($location, $run_start_time) {
+                    $payloadStream = $result['Payload'];
+                    $response_data = $payloadStream->getContents();
+
+                    $decoded_response = json_decode($response_data, true);
+                    if (json_last_error() === JSON_ERROR_NONE) {
+                        $msg = json_encode(array_merge(["location" => $location], $decoded_response));
+                    } else {
+                        $msg = json_encode(["location" => $location, "status" => false, "error" => "error decoding json"]);
+                    }
+
+                    $resonded_time = (microtime(true) - $run_start_time) * 1000;
+                    echo "event: progressMsg\n";
+                    echo "data: $location responded at $resonded_time...\n\n";
+                    flush();
+
+                    echo "event: locResult\n";
+                    echo "data: $msg\n\n";
+                    flush();
+                    
+                },
+                function ($reason) use ($location) {
+                    $msg = json_encode(["location" => $location, "error" => "request not fulfilled"]);
+
+                    echo "event: locResult\n";
+                    echo "data: $msg\n\n";
+                    flush();
+                }
+            );
+        }
+
+        Utils::settle($promises)->wait();
+
+        $responses_received_time = (microtime(true) - $run_start_time) * 1000;
+        echo "event: progressMsg\n";
+        echo "data: all responses received at $responses_received_time...\n\n";
+        flush();
+
+        foreach ($data["test_locations"] as $location) {
+
+            if(array_key_exists($location, $do_function_urls)) {
                 $response = $this->invoke_do_serverless_function($do_function_urls[$location], ['url' => $data["test_url"]]);
                 $msg = json_encode(array_merge(["location" => $location], $response));
 
@@ -287,7 +363,6 @@ class ToolsController extends MainController
                 // ob_flush();
                 flush();
 
-                sleep(1);
             }
 
         }
@@ -310,21 +385,8 @@ class ToolsController extends MainController
             'Payload' => json_encode($data),
         ];
 
-        try {
-            $result = $client->invoke($params);
-            $responsePayload = $result['Payload']->getContents();
+        return $client->invokeAsync($params);
 
-            $decodedResponse = json_decode($responsePayload, true);
-
-            if (json_last_error() === JSON_ERROR_NONE) {
-                return $decodedResponse;
-            } else {
-                return ["status" => false, "error" => "Error decoding JSON: " . json_last_error_msg()];
-            }
-
-        } catch (AwsException $e) {
-            return ["status" => false, "error" => "error connecting remote"];
-        }
     }
 
     private function invoke_do_serverless_function($function_url, $data, $api_key = null)
@@ -369,7 +431,7 @@ class ToolsController extends MainController
          * currently seven locations supported
          */
 
-        $allowed_locations = ["bangalore", "sydney", "london", "newyork", "saopaulo", "capetown", "uae"];
+        $allowed_locations = ["mumbai", "bangalore", "sydney", "london", "newyork", "saopaulo", "capetown", "uae"];
 
         foreach ($locations as $location) {
             if (!in_array($location, $allowed_locations)) {

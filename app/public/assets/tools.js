@@ -6,6 +6,7 @@ const app = Vue.createApp({
                 locations: ['bangalore', 'uae', 'london', 'newyork'],
             },
             regions: {
+                mumbai: {title: 'Mumbai'},
                 bangalore: {title: 'Bangalore'},
                 uae: {title: 'UAE'},
                 london: {title: 'London'},

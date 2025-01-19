@@ -6,6 +6,9 @@ use function DI\create;
 use function DI\get;
 use DI\Container;
 
+use GuzzleHttp\HandlerStack;
+use Aws\Handler\GuzzleV6\GuzzleHandler;
+
 include __DIR__ . '/models/Database.php';
 include __DIR__ . '/models/ContentModel.php';
 include __DIR__ . '/models/TaxonomyModel.php';
@@ -47,8 +50,13 @@ return [
     'RedirectMiddleware' => create(RedirectMiddleware::class)
         ->constructor(get('Database')),
 
+    'SharedGuzzleHandler' => function () {
+        $handlerStack = GuzzleHttp\HandlerStack::create();
+        return new GuzzleHttp\Handler\CurlMultiHandler(['handler' => $handlerStack]);
+    },
+
     'LambdaClientFactory' => function(Container $container) {
-        return function (string $region) {
+        return function (string $region) use ($container) {
             return new LambdaClient (
                 [
                     'region' => $region,
@@ -57,6 +65,7 @@ return [
                         'key' => $_ENV['AWS_ACCESS_KEY_ID'],
                         'secret' => $_ENV['AWS_SECRET_ACCESS_KEY'],
                     ],
+                    'http_handler' => $container->get('SharedGuzzleHandler'),
                 ]
             );
         };

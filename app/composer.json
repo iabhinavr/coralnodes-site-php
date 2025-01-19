@@ -6,6 +6,8 @@
         "erusev/parsedown": "^1.7",
         "symfony/yaml": "^6.3",
         "symfony/dotenv": "^6.4",
-        "aws/aws-sdk-php": "^3.336"
+        "aws/aws-sdk-php": "^3.336",
+        "guzzlehttp/guzzle": "^7.9",
+        "guzzlehttp/promises": "^2.0"
     }
 }
