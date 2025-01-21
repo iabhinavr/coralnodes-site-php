@@ -1,7 +1,14 @@
 <?php
 
 use Aws\Exception\AwsException;
+use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Promise\Utils;
+
+use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\RequestException;
+use Psr\Http\Message\ResponseInterface;
+use GuzzleHttp\Client;
+use GuzzleHttp\Promise;
 
 class ToolsController extends MainController
 {
@@ -13,14 +20,18 @@ class ToolsController extends MainController
     private $toolsModel;
     private $toolsMetadataModel;
 
+    private $httpClient;
+
     public function __construct(
         callable $lambdaClientFactory,
         ToolsModel $toolsModel,
-        ToolsMetadataModel $toolsMetadataModel
+        ToolsMetadataModel $toolsMetadataModel,
+        Client $httpClient
     ) {
         $this->lambdaClientFactory = $lambdaClientFactory;
         $this->toolsModel = $toolsModel;
         $this->toolsMetadataModel = $toolsMetadataModel;
+        $this->httpClient = $httpClient;
     }
 
     public function main($method, $vars = null)
@@ -287,12 +298,12 @@ class ToolsController extends MainController
         echo "data: running test at $running_test_time...\n\n";
         flush();
 
-        $promises = [];
+        $lambda_promises = [];
 
         foreach($data["test_locations"] as $location) {
             if(array_key_exists($location, $lambda_cities_regions)) {
-                if(!$warmups[$location]["status"]) {
-                    $msg = json_encode(array_merge(["location" => $location], $warmups[$location]));
+                if(empty($warmups[$location]["status"])) {
+                    $msg = json_encode(["location" => $location, "status" => false, "error" => "not responding"]);
                     echo "event: locResult\n";
                     echo "data: $msg\n\n";
                     // ob_flush();
@@ -303,7 +314,7 @@ class ToolsController extends MainController
                 // echo "data: Testing from $location...\n\n";
                 // flush();
             
-                $promises[$location] = $this->invoke_lambda_function('ttfbCheck', $lambda_cities_regions[$location], ['url' => $data["test_url"]]);
+                $lambda_promises[$location] = $this->invoke_lambda_function('ttfbCheck', $lambda_cities_regions[$location], ['url' => $data["test_url"]]);
             }
         }
 
@@ -312,15 +323,18 @@ class ToolsController extends MainController
         echo "data: starting to wait for responses at $waiting_responses_time...\n\n";
         flush();
 
-        foreach ($promises as $location => $promise) {
-            $promise->then(
+        foreach ($lambda_promises as $location => $lambda_promise) {
+            $lambda_promise->then(
                 function ($result) use ($location, $run_start_time) {
                     $payloadStream = $result['Payload'];
                     $response_data = $payloadStream->getContents();
 
                     $decoded_response = json_decode($response_data, true);
                     if (json_last_error() === JSON_ERROR_NONE) {
-                        $msg = json_encode(array_merge(["location" => $location], $decoded_response));
+                        $msg = empty($decoded_response["status"]) ? 
+                            json_encode(["location" => $location, "status" => false, "error" => "request timed out"]) : 
+                            json_encode(array_merge(["location" => $location], $decoded_response));
+                        
                     } else {
                         $msg = json_encode(["location" => $location, "status" => false, "error" => "error decoding json"]);
                     }
@@ -345,27 +359,51 @@ class ToolsController extends MainController
             );
         }
 
-        Utils::settle($promises)->wait();
+        
 
         $responses_received_time = (microtime(true) - $run_start_time) * 1000;
         echo "event: progressMsg\n";
         echo "data: all responses received at $responses_received_time...\n\n";
         flush();
 
+        $do_promises = [];
+
         foreach ($data["test_locations"] as $location) {
 
             if(array_key_exists($location, $do_function_urls)) {
-                $response = $this->invoke_do_serverless_function($do_function_urls[$location], ['url' => $data["test_url"]]);
-                $msg = json_encode(array_merge(["location" => $location], $response));
-
-                echo "event: locResult\n";
-                echo "data: $msg\n\n";
-                // ob_flush();
-                flush();
-
+                $do_promises[$location] = $this->invoke_do_serverless_function($do_function_urls[$location], ['url' => $data["test_url"]]);               
             }
 
         }
+
+        foreach($do_promises as $location => $do_promise) {
+            $do_promise->then(
+                function ($response) use ($location) {
+                    
+                    $response_data = $response->getBody()->getContents();
+                    $decoded_response = json_decode($response_data, true);
+                    if (json_last_error() === JSON_ERROR_NONE) {
+                        $msg = json_encode(array_merge(["location" => $location], $decoded_response));
+                    } else {
+                        $msg = json_encode(["location" => $location, "status" => false, "error" => "error decoding json"]);
+                    }
+                    echo "event: locResult\n";
+                    echo "data: $msg\n\n";
+                    // ob_flush();
+                    flush();
+                },
+                function ($exception) use ($location) {
+                    $msg = json_encode(["location" => $location, "status" => false, "error" => "request not fulfilled"]);
+                    echo "event: locResult\n";
+                    echo "data: $msg\n\n";
+                    // ob_flush();
+                    flush();
+                }
+            );
+        }
+
+        Utils::settle($lambda_promises)->wait();
+        Utils::settle($do_promises)->wait();
 
         echo "event: progressMsg\n";
         echo "data: wrapping up...\n\n";
@@ -389,37 +427,25 @@ class ToolsController extends MainController
 
     }
 
-    private function invoke_do_serverless_function($function_url, $data, $api_key = null)
-    {
+    private function invoke_do_serverless_function(
+        string $function_url,
+        array $data,
+        ?string $api_key = null
+    ): PromiseInterface {
+        
+        $headers = [
+            'Content-Type' => 'application/json',
+        ];
 
-        $ch = curl_init();
+        if ($api_key) {
+            $headers['Authorization'] = "Bearer $api_key";
+        }
 
-        curl_setopt($ch, CURLOPT_URL, $function_url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'Content-Type: application/json',
-            $api_key ? "Authorization: Bearer $api_key" : '',
+        return $this->httpClient->postAsync($function_url, [
+            'json' => $data,
+            'headers' => $headers,
         ]);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-
-        $response = curl_exec($ch);
-
-        if (curl_errno($ch)) {
-            $error = curl_error($ch);
-            curl_close($ch);
-            return ["status" => false, "error" => "could not connect test server"];
-        }
-
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-
-        if($httpCode >= 200 && $httpCode < 300) {
-            return json_decode($response, true);
-        }
-
-        return ["status" => false, "error" => "error {$httpCode} from test server: {$response}"];
-
+        
     }
 
     private function validate_locations($locations)

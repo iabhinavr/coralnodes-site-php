@@ -15,6 +15,7 @@
 <script src="<?= _asset_url_("/assets/frontend.js") ?>"></script>
 <script>hljs.highlightAll();</script>
 <?php if(isset($props["tools_page"])) : ?>
+<script src="<?= _asset_url_("/assets/map-path.js") ?>"></script>
 <script src="<?= _asset_url_("/assets/vue.global.js") ?>"></script>
 <script src="<?= _asset_url_("/assets/tools.js") ?>"></script>
 <?php endif; ?>

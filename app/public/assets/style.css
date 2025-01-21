@@ -223,6 +223,24 @@
         @apply text-base text-slate-100;
         word-break: break-word;
     }
+    .loc-dot.excellent {
+        @apply fill-emerald-500;
+    }
+    .loc-dot.fast {
+        @apply fill-lime-500;
+    }
+    .loc-dot.average {
+        @apply fill-yellow-500;
+    }
+    .loc-dot.slow {
+        @apply fill-orange-500;
+    }
+    .loc-dot.poor {
+        @apply fill-red-500;
+    }
+    #result-map-tooltip {
+        transform: translateX(-50%);
+    }
 }
 
 /* inter-regular - latin */

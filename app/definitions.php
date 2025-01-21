@@ -8,6 +8,7 @@ use DI\Container;
 
 use GuzzleHttp\HandlerStack;
 use Aws\Handler\GuzzleV6\GuzzleHandler;
+use GuzzleHttp\Client;
 
 include __DIR__ . '/models/Database.php';
 include __DIR__ . '/models/ContentModel.php';
@@ -71,8 +72,16 @@ return [
         };
     },
 
+    'HttpClient' => function(Container $container) {
+        return new Client([
+            'timeout' => 10.0,
+            'verify' => true,
+            'handler' => $container->get('SharedGuzzleHandler'), // Use SharedGuzzleHandler
+        ]);
+    },
+
     'ToolsController' => create(ToolsController::class)
-        ->constructor(get('LambdaClientFactory'), get('ToolsModel'), get('ToolsMetadataModel')),
+        ->constructor(get('LambdaClientFactory'), get('ToolsModel'), get('ToolsMetadataModel'), get('HttpClient')),
 
     
 ];
