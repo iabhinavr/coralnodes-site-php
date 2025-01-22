@@ -6,18 +6,18 @@ const app = Vue.createApp({
                 locations: ['bangalore', 'uae', 'london', 'newyork'],
             },
             regions: {
-                mumbai: {title: 'Mumbai'},
-                bangalore: {title: 'Bangalore'},
-                uae: {title: 'UAE'},
-                london: {title: 'London'},
-                newyork: {title: 'New York'},
-                sydney: {title: 'Sydney'},
-                saopaulo: {title: 'Sao Paulo'},
-                capetown: {title: 'Cape Town'},
+                mumbai: { title: 'Mumbai' },
+                bangalore: { title: 'Bangalore' },
+                uae: { title: 'UAE' },
+                london: { title: 'London' },
+                newyork: { title: 'New York' },
+                sydney: { title: 'Sydney' },
+                saopaulo: { title: 'Sao Paulo' },
+                capetown: { title: 'Cape Town' },
             },
             currentTest: {
-                active: false,
-                status: "",
+                active: true,
+                status: "finished",
                 url: "https://www.coralnodes.com",
                 locations: [],
                 error: null,
@@ -32,6 +32,7 @@ const app = Vue.createApp({
                     JSON.parse(localStorage.getItem('reply_saopaulo')),
                     JSON.parse(localStorage.getItem('reply_capetown'))
                 ],
+                resultBlob: null
             },
             expandedRows: [],
             formDisabled: false,
@@ -80,21 +81,61 @@ const app = Vue.createApp({
                 },
                 svgPath: window.svgPath
             },
-            
+            error: null
+
         };
     },
     computed: {
         testTitle() {
-            if(!this.currentTest.active) {
+            if (!this.currentTest.active) {
                 return '';
             }
-            if(this.currentTest.status === 'running') {
+            if (this.currentTest.status === 'running') {
                 return `Checking TTFB for ${this.currentTest.url}`;
             }
-            if(this.currentTest.status === 'finished') {
+            if (this.currentTest.status === 'finished') {
                 return `TTFB Results for ${this.currentTest.url}`;
             }
-        }
+        },
+        testResult() {
+            if (this.currentTest?.status === "finished") {
+
+                let initialSum = 0;
+                let filtered = this.currentTest.locResults.filter((lR) => lR.status);
+
+                let average = filtered.reduce((previous, current) => {
+                    return previous + Math.round(current.ttfb)
+                }, initialSum) / filtered.length;
+
+
+                let speedCategory = false;
+
+                if(average < 200) {
+                    speedCategory = 'Excellent';
+                }
+                else if (average < 500 && average >= 200) {
+                    speedCategory = 'Fast';
+                }
+                else if (average < 1000 && average >= 500) {
+                    speedCategory = 'Average';
+                }
+                else if (average < 2000 && average >= 1000) {
+                    speedCategory = 'Slow';
+                }
+                else if (average >= 2000) {
+                    speedCategory = 'Poor';
+                }
+        
+                return {
+                    average: Math.round(average),
+                    speedCategory
+                };
+            }
+            return false
+        },
+        resultBlob() {
+            return window.URL.createObjectURL(new Blob([JSON.stringify({url: this.currentTest.url, results: this.currentTest.locResults})], {type: 'application/json'}));
+        },
     },
     methods: {
         toQueryString(params) {
@@ -106,27 +147,38 @@ const app = Vue.createApp({
                     return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
                 })
                 .join('&');
-        
+
             return queryString;
         },
-        async initiateSSE(params) {
+        async runTest(params) {
+
+            this.currentTest.active = true;
+            this.currentTest.status = 'running';
+            this.currentTest.error = null;
+            this.currentTest.progressMsg = null;
+            this.currentTest.locResults = [];
+            this.expandedRows = [];
+
+            this.currentTest.url = this.formData.url;
+            this.currentTest.locations = this.formData.locations;
+            
             const queryString = this.toQueryString(params);
 
-            console.log("initiateSSE...");
+            console.log("runTest...");
 
             const eventSource = new EventSource(`/tools/ttfb-test-stream/?${queryString}`);
-        
+
             eventSource.onopen = () => {
-              console.log("Connected");
+                console.log("Connected");
             };
-        
+
             eventSource.onmessage = (event) => {
-              const data = event.data;
-              console.log(data);
+                const data = event.data;
+                console.log(data);
             };
-        
+
             eventSource.onerror = () => {
-              console.log("Error (connection lost or failed)");
+                console.log("Error (connection lost or failed)");
             };
 
             eventSource.addEventListener('testError', (event) => {
@@ -137,17 +189,18 @@ const app = Vue.createApp({
             eventSource.addEventListener('progressMsg', (event) => {
                 this.currentTest.progressMsg = event.data;
             });
-        
+
             eventSource.addEventListener('locResult', (event) => {
-              const data = JSON.parse(event.data);
-              this.currentTest.locResults.push(data);
+                const data = JSON.parse(event.data);
+                this.currentTest.locResults.push(data);
             });
-        
+
             eventSource.addEventListener('[end]', (event) => {
-              const data = event.data;
-              this.currentTest.status = 'finished';
-              this.currentTest.progressMsg = data;
-              eventSource.close();
+                const data = event.data;
+                this.currentTest.status = 'finished';
+                this.currentTest.progressMsg = data;
+                eventSource.close();
+                this.generateResultBlob();
             });
 
             setTimeout(() => {
@@ -158,21 +211,14 @@ const app = Vue.createApp({
         },
         async submitForm() {
             console.log('submitForm...');
-            this.currentTest.active = true;
-            this.currentTest.status = 'running';
-            this.currentTest.error = null;
-            this.currentTest.progressMsg = null;
-            this.currentTest.locResults = [];
-            this.expandedRows = [];
+            
             this.formDisabled = true;
+            this.error = null;
             try {
 
-                this.currentTest.url = this.formData.url;
-                this.submittedLocations = this.formData.locations;
-
                 const formData = new FormData();
-                formData.append("url", this.currentTest.url);
-                this.submittedLocations.forEach((location) => {
+                formData.append("url", this.formData.url);
+                this.formData.locations.forEach((location) => {
                     formData.append("locations[]", location);
                 });
                 const response = await fetch('/tools/ttfb-check/', {
@@ -180,22 +226,26 @@ const app = Vue.createApp({
                     body: formData,
                 });
                 const result = await response.json();
-                if(result.status) {
-                    this.initiateSSE(result);
+                if (result.status) {
+                    this.runTest(result);
+                }
+                else {
+                    this.error = result.error;
+                    throw new Error (result.error);
                 }
             } catch (error) {
-                console.error('Error:', error);
+                console.error(error);
             }
         },
         getSpeedClass(ttfb, speed) {
             let res = false;
             switch (speed) {
                 case 'excellent':
-                    if(ttfb < 200) 
+                    if (ttfb < 200)
                         res = true;
                     break;
                 case 'fast':
-                    if(ttfb < 500 && ttfb >= 200)
+                    if (ttfb < 500 && ttfb >= 200)
                         res = true;
                     break;
                 case 'average':
@@ -207,7 +257,7 @@ const app = Vue.createApp({
                         res = true;
                     break;
                 case 'poor':
-                    if(ttfb >= 2000)
+                    if (ttfb >= 2000)
                         res = true;
                     break;
                 default:
@@ -218,16 +268,16 @@ const app = Vue.createApp({
         isDotClass(loc, speed) {
             let res = false;
             let locResult = this.currentTest.locResults.find((l) => l.location === loc);
-            if(!locResult) {
+            if (!locResult) {
                 return res;
             }
-            if(locResult.status) {
+            if (locResult.status) {
                 res = this.getSpeedClass(locResult.ttfb, speed);
             }
             return res;
         },
         toggleExpansion(index) {
-            if(this.expandedRows.includes(index)) {
+            if (this.expandedRows.includes(index)) {
                 this.expandedRows = this.expandedRows.filter((i) => i !== index);
             }
             else {
@@ -235,30 +285,34 @@ const app = Vue.createApp({
             }
         },
         isExpanded(index) {
-            if(this.expandedRows.includes(index)) {
+            if (this.expandedRows.includes(index)) {
                 return true;
             }
             return false;
         },
         onLocDotMouseEnter(event) {
-            
+
             let locIndex = event.currentTarget.getAttribute('data-loc-index');
 
-            if(locIndex !== this.resultMap.toolTip.locIndex) {
+            if (locIndex !== this.resultMap.toolTip.locIndex) {
                 let dotPos = event.currentTarget.getBoundingClientRect();
                 let locResult = this.currentTest.locResults.find((l) => l.location === locIndex);
                 this.resultMap.toolTip.show = true;
                 this.resultMap.toolTip.locIndex = locIndex;
                 this.resultMap.toolTip.ttfb = locResult?.status ? Math.round(locResult.ttfb) + 'ms' : 'n/a';
-                this.resultMap.toolTip.x = dotPos.x + (dotPos.width/2) + window.scrollX;
+                this.resultMap.toolTip.x = dotPos.x + (dotPos.width / 2) + window.scrollX;
                 this.resultMap.toolTip.y = dotPos.y + (dotPos.height) + window.scrollY + 10;
             }
-            
+
         },
         onLocDotMouseLeave(event) {
             this.resultMap.toolTip.show = false;
             this.resultMap.toolTip.locIndex = null;
-        }
+        },
+        generateResultBlob() {
+            this.currentTest.resultBlob = window.URL.createObjectURL(new Blob([this.currentTest.locResults], {type: 'application/json'}));
+        },
+
     },
 });
 app.mount('#vue-app');

@@ -132,6 +132,24 @@ class ToolsController extends MainController
 
     public function ttfb_check_post()
     {
+        header('Content-Type: application/json');
+
+        /**
+         * region and url are required
+         */
+
+        if (!isset($_POST['locations']) || !isset($_POST['url'])) {
+            echo json_encode(["status" => false, "error" => "invalid request"]);
+            exit;
+        }
+
+        // url validation
+
+        if (!filter_var($_POST['url'], FILTER_VALIDATE_URL) || !preg_match('/^https?:\/\//', $_POST['url'])) {
+            echo json_encode(["status" => false, "error" => "the request must contain a valid http or https url"]);
+            exit;
+        }
+
         $rate_limits = $this->ttfb_rate_limiter();
 
         $rate_limit_errors = [
@@ -157,7 +175,6 @@ class ToolsController extends MainController
                 exit;
             }
         }
-
 
         $this->create_ttfb_test();
     }
