@@ -3,8 +3,9 @@
         <h1 class="text-4xl mb-4 font-bold">Measure TTFB From 6 Continents</h1>
         <form id="ttfb-check-form" @submit.prevent="submitForm" class="form-2-col">
             <div class="flex items-center justify-between min-w-[40vw]">
-                <input v-model="formData.url" type="text" name="url" id="url" placeholder="https://www.example.com"
-                    class="main-input" required>
+                <input v-model="formData.url" type="text" name="url" id="url" placeholder="https://www.example.com" class="main-input" required>
+                <input v-model="formData.websiteTitle" type="text" name="website-title" id="website-title" placeholder="enter your website title">
+                <input type="hidden" name="t2rt" id="t2rt" value="<?= time() ?>">
                 <button type="submit" class="btn-primary-1">Test</button>
             </div>
 
@@ -26,7 +27,7 @@
         <h3 class="text-2xl text-slate-400 font-bold py-2">{{testTitle}}</h3>
         <h4 class="text-xl text-slate-400 font-bold py-2">{{currentTest.progressMsg}}</h4>
 
-        <div class="result-map">
+        <div id="result-map" class="result-map">
             <svg version="1.1" viewBox="0 0 1052.4 580" xmlns="http://www.w3.org/2000/svg">
                 <path fill="darkslategrey" :d="resultMap.svgPath" />
                 <g fill="#ccc" stroke-opacity=".79755" stroke-width="2.6523">

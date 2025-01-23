@@ -256,6 +256,10 @@
     #result-map-tooltip {
         transform: translateX(-50%);
     }
+
+    #ttfb-check-form #website-title {
+        display: none;
+    }
 }
 
 /* inter-regular - latin */

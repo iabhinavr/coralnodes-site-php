@@ -135,6 +135,26 @@ class ToolsController extends MainController
         header('Content-Type: application/json');
 
         /**
+         * catch honeypot
+         */
+
+        if(!empty($_POST['website-title'])) {
+            http_response_code(400);
+            echo json_encode(["status" => false, "error" => "access denied"]);
+            exit;
+        }
+
+        /**
+         * catch speedy submissions
+         */
+
+        if(time() - (int)$_POST["t2rt"] < 2) {
+            http_response_code(400);
+            echo json_encode(["status" => false, "error" => "unexpected behaviour"]);
+            exit;
+        }
+
+        /**
          * region and url are required
          */
 
@@ -172,6 +192,19 @@ class ToolsController extends MainController
         if($count_last_30_mins !== false) {
             if((int)$count_last_30_mins > 30) {
                 echo json_encode(["status" => false, "error" => "currently busy, try after some time"]);
+                exit;
+            }
+        }
+
+        // limit by ip
+
+        $ip_hash = hash('sha256', $_SERVER['REMOTE_ADDR']);
+
+        $ip_count_last_30_mins = $this->toolsModel->getIpRequestCountLast30Mins($ip_hash);
+
+        if($ip_count_last_30_mins !== false) {
+            if((int)$ip_count_last_30_mins > 10) {
+                echo json_encode(["status" => false, "error" => "too many requests in a short span, try after 30 minutes", "req_count" => (int)$ip_count_last_30_mins]);
                 exit;
             }
         }
@@ -220,7 +253,8 @@ class ToolsController extends MainController
             "test_env" => _is_local() ? 'staging' : 'production',
             "test_date" => $test_date,
             "test_hash" => hash('sha256', $string_to_hash),
-            "test_status" => "initiated"
+            "test_status" => "initiated",
+            "ip_hash" => hash('sha256', $_SERVER['REMOTE_ADDR']),
         ];
 
         $test_creation = $this->toolsModel->create_ttfb_test($data);
@@ -505,11 +539,12 @@ class ToolsController extends MainController
         $hour = date('H');
 
         $envn = _is_local() ? "staging" : "prod";
+        $other_envn = ($envn === 'staging') ? 'prod' : 'staging';
 
         $keys = [
-            "monthly" => "ttfb_check_count_{$year}_{$month}_{$envn}",
-            "daily" => "ttfb_check_count_{$year}_{$month}_{$day}_{$envn}",
-            "hourly" => "ttfb_check_count_{$year}_{$month}_{$day}_{$hour}_{$envn}",
+            "monthly" => "ttfb_check_count_{$year}_{$month}_",
+            "daily" => "ttfb_check_count_{$year}_{$month}_{$day}_",
+            "hourly" => "ttfb_check_count_{$year}_{$month}_{$day}_{$hour}_",
         ];
 
         foreach(["monthly", "daily", "hourly"] as $time_period) {
@@ -520,24 +555,45 @@ class ToolsController extends MainController
             }
 
             $limit = (int)$getLimit["result"];
+            $total_count = 0;
 
-            $current_count = $this->toolsMetadataModel->getMetaData($keys[$time_period]);
+            // count for the current envn
+
+            $current_count = $this->toolsMetadataModel->getMetaData("{$keys[$time_period]}{$envn}");
     
             if($current_count["status"] === true) {
-                if((int)$current_count["result"] >= $limit) {
-                   return ["exceeded" => $time_period];
-                }
-                else {
-                    $this->toolsMetadataModel->incrementTtfbTestCount($keys[$time_period], $limit);
-                }
+                $total_count += (int)$current_count["result"];
             }
             else {
                 if($current_count["errorCode"] === "missing") {
-                    $this->toolsMetadataModel->addMetaData($keys[$time_period], "1");
+                    $this->toolsMetadataModel->addMetaData("{$keys[$time_period]}{$envn}", "1");
                 }
                 else {
                     return ["exceeded" => "limit_fetch_error"];
                 }
+            }
+
+            // count for the other environment too
+
+            $current_count_other = $this->toolsMetadataModel->getMetaData("{$keys[$time_period]}{$other_envn}");
+
+            if($current_count_other["status"] === true) {
+                $total_count += (int)$current_count_other["result"];
+            }
+            else {
+                if($current_count_other["errorCode"] === "missing") {
+                    $this->toolsMetadataModel->addMetaData("{$keys[$time_period]}{$other_envn}", "0");
+                }
+                else {
+                    return ["exceeded" => "limit_fetch_error"];
+                }
+            }
+
+            if($total_count >= $limit) {
+                return ["exceeded" => $time_period];
+            }
+            else {
+                $this->toolsMetadataModel->incrementTtfbTestCount("{$keys[$time_period]}{$envn}", $limit);
             }
         }
 

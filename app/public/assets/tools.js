@@ -4,6 +4,7 @@ const app = Vue.createApp({
             formData: {
                 url: 'https://www.coralnodes.com',
                 locations: ['bangalore', 'uae', 'london', 'newyork'],
+                websiteTitle: "",
             },
             regions: {
                 mumbai: { title: 'Mumbai' },
@@ -16,9 +17,9 @@ const app = Vue.createApp({
                 capetown: { title: 'Cape Town' },
             },
             currentTest: {
-                active: true,
-                status: "finished",
-                url: "https://www.coralnodes.com",
+                active: false,
+                status: "begin",
+                url: "",
                 locations: [],
                 error: null,
                 progressMsg: "Initializing test...",
@@ -166,6 +167,16 @@ const app = Vue.createApp({
 
             console.log("runTest...");
 
+            await this.$nextTick();
+
+            let resultMapElem = document.getElementById('result-map');
+            console.log(resultMapElem);
+
+            if(resultMapElem) {
+                resultMapElem.scrollIntoView({behavior: 'smooth'});
+
+            }
+
             const eventSource = new EventSource(`/tools/ttfb-test-stream/?${queryString}`);
 
             eventSource.onopen = () => {
@@ -221,6 +232,8 @@ const app = Vue.createApp({
                 this.formData.locations.forEach((location) => {
                     formData.append("locations[]", location);
                 });
+                formData.append("website-title", this.formData.websiteTitle);
+                formData.append("t2rt", document.getElementById("t2rt").value);
                 const response = await fetch('/tools/ttfb-check/', {
                     method: 'POST',
                     body: formData,

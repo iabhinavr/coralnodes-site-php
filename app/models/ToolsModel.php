@@ -11,13 +11,14 @@ class ToolsModel extends Database {
 
     public function create_ttfb_test($data): array {
         try {
-            $stmt = $this->db_con->prepare("INSERT INTO ttfb_tests (test_key, test_user, test_env, test_date, test_hash, test_status) VALUES (:test_key, :test_user, :test_env, :test_date, :test_hash, :test_status)");
+            $stmt = $this->db_con->prepare("INSERT INTO ttfb_tests (test_key, test_user, test_env, test_date, test_hash, test_status, ip_hash) VALUES (:test_key, :test_user, :test_env, :test_date, :test_hash, :test_status, :ip_hash)");
             $stmt->bindParam(":test_key", $data["test_key"]);
             $stmt->bindParam(":test_user", $data["test_user"]);
             $stmt->bindParam(":test_env", $data["test_env"]);
             $stmt->bindParam(":test_date", $data["test_date"]);
             $stmt->bindParam(":test_hash", $data["test_hash"]);
             $stmt->bindParam(":test_status", $data["test_status"]);
+            $stmt->bindParam(":ip_hash", $data["ip_hash"]);
             if($stmt->execute()) {
                 return ["status" => true];
             }
@@ -82,6 +83,19 @@ class ToolsModel extends Database {
     public function getTtfbTestCountLast30Mins() {
         try {
             $stmt = $this->db_con->query("SELECT COUNT(*) as count FROM ttfb_tests WHERE test_date >= NOW() - INTERVAL 30 MINUTE");
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result['count'];
+        }
+        catch(PDOException $e) {
+            return false;
+        }
+    }
+
+    public function getIpRequestCountLast30Mins($ip_hash) {
+        try {
+            $stmt = $this->db_con->prepare("SELECT COUNT(*) as count FROM ttfb_tests WHERE test_date >= NOW() - INTERVAL 30 MINUTE AND ip_hash = :ip_hash");
+            $stmt->bindParam(":ip_hash", $ip_hash);
+            $stmt->execute();
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
             return $result['count'];
         }
