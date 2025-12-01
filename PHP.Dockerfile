@@ -1,4 +1,4 @@
-FROM php:fpm
+FROM php:8.3-fpm
 
 ARG APP_ENV=production
 
@@ -44,7 +44,7 @@ RUN if [ "$APP_ENV" = "local" ]; then \
         && docker-php-ext-enable xdebug; \
     fi
 
-RUN pecl install imagick-3.7.0 && docker-php-ext-enable imagick
+RUN pecl install imagick && docker-php-ext-enable imagick
 
 RUN adduser abhinav
 USER abhinav
