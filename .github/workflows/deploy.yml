@@ -45,5 +45,5 @@ jobs:
           key: ${{ secrets.VPS_KEY }}
           port: ${{ secrets.VPS_PORT }}
           script: |
-            cp /home/abhinav/.env /home/abhinav/coralnodes-site-php/.env
-            cp /home/abhinav/.env /home/abhinav/coralnodes-site-php/app/.env
+            cp /home/abhinav/.cnenv /home/abhinav/coralnodes-site-php/.env
+            cp /home/abhinav/.cnenv /home/abhinav/coralnodes-site-php/app/.env
